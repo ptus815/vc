@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>节点</title>
+    <title>订阅链接提取 | 终极科技版</title>
     <style>
         * {
             margin: 0;
@@ -16,8 +16,8 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 8vh 20px 20px 20px;
             transition: background 0.4s ease, color 0.4s ease;
             background: #000000;
             color: #eaeaea;
@@ -302,10 +302,61 @@
             font-family: ui-monospace, monospace;
         }
 
+        .settings-card {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.white-theme .settings-card {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #eaeaea;
+        }
+        
+        body.white-theme .setting-label {
+            color: #111111;
+        }
+
+        .setting-select {
+            background: #111111;
+            color: #eaeaea;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        body.white-theme .setting-select {
+            background: #f4f5f7;
+            color: #111111;
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .setting-select:focus {
+            border-color: #3291ff;
+        }
+
         .actions {
             display: flex;
             justify-content: flex-end;
-            margin-top: 24px;
             margin-bottom: 30px;
         }
         
@@ -348,7 +399,6 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            margin-top: 10px;
         }
 
         .result-item {
@@ -404,12 +454,13 @@
         }
         
         .url {
-            font-size: 15px;
+            font-size: 14px;
             color: #eaeaea;
             font-family: ui-monospace, Consolas, monospace;
             font-weight: 500;
             word-break: break-all;
             text-decoration: none;
+            line-height: 1.5;
         }
         
         body.white-theme .url {
@@ -468,12 +519,12 @@
 
     <div class="tab-wrapper">
         <div class="tab-group" id="tabs">
-            <button class="tab-btn active" data-target="remotePanel" title="解析远程链接">
+            <button class="tab-btn active" data-target="remotePanel">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
             </button>
-            <button class="tab-btn" data-target="localPanel" title="解析本地文件">
+            <button class="tab-btn" data-target="localPanel">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
@@ -485,9 +536,6 @@
 
     <div class="panel active" id="remotePanel">
         <textarea id="urlInput"></textarea>
-        <div class="actions">
-            <button class="btn" id="fetchBtn">获取订阅</button>
-        </div>
     </div>
 
     <div class="panel" id="localPanel">
@@ -499,7 +547,25 @@
             <div class="upload-title">点击选择或拖拽本地 .js 文件</div>
             <div class="upload-subtitle">无需上传服务器 · 本地极速解析</div>
         </div>
-        <div style="height: 30px;"></div>
+    </div>
+
+    <div class="settings-card">
+        <span class="setting-label">优选订阅器 (sub域名)</span>
+        <select class="setting-select" id="subDomainSelect">
+            <option value="random">🎲 随机优选分配</option>
+            <option value="owo.o00o.ooo">owo.o00o.ooo</option>
+            <option value="cm.soso.edu.kg">cm.soso.edu.kg (周润发)</option>
+            <option value="zrf.zrf.me">zrf.zrf.me (周润发)</option>
+            <option value="sub.keaeye.icu">sub.keaeye.icu (文烨)</option>
+            <option value="sub.mot.cloudns.biz">sub.mot.cloudns.biz (Kristi)</option>
+            <option value="sub.mia.xx.kg">sub.mia.xx.kg (Mia)</option>
+            <option value="sub.lzjbaby.com">sub.lzjbaby.com (辣子鸡)</option>
+            <option value="sub.xdu.qzz.io">sub.xdu.qzz.io (辣椒炒肉)</option>
+        </select>
+    </div>
+
+    <div class="actions">
+        <button class="btn" id="fetchBtn">获取订阅</button>
     </div>
 
     <div class="results" id="resultsContainer"></div>
@@ -556,6 +622,37 @@
         return `https://${domain}/${subPath}`;
     }
 
+    function decodeBase64Safe(str) {
+        try {
+            return decodeURIComponent(escape(atob(str)));
+        } catch(e) {
+            try {
+                return atob(str);
+            } catch(e2) {
+                return str;
+            }
+        }
+    }
+
+    function getSelectedSubDomain() {
+        const select = document.getElementById('subDomainSelect');
+        let val = select.value;
+        if (val === 'random') {
+            const subs = [
+                'owo.o00o.ooo',
+                'cm.soso.edu.kg',
+                'zrf.zrf.me',
+                'sub.keaeye.icu',
+                'sub.mot.cloudns.biz',
+                'sub.mia.xx.kg',
+                'sub.lzjbaby.com',
+                'sub.xdu.qzz.io'
+            ];
+            val = subs[Math.floor(Math.random() * subs.length)];
+        }
+        return val;
+    }
+
     function copyToClipboard(text) {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -594,7 +691,7 @@
                 html += `
                     <div class="result-item fail">
                         <div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
-                        <div class="info-group"><span class="error-msg">解析失败：${item.error}</span></div>
+                        <div class="info-group"><span class="error-msg">${item.error}</span></div>
                     </div>`;
             }
         }
@@ -610,42 +707,71 @@
             items.forEach(el => el.classList.add('fade-out'));
             setTimeout(() => {
                 resultsContainer.innerHTML = '';
-            }, 500);
+            }, 600);
         }, 3000);
+    }
+
+    async function processAndFetchDeep(urlStr) {
+        try {
+            const configResponse = await fetch(urlStr);
+            if (!configResponse.ok) throw new Error(`HTTP ${configResponse.status}`);
+            
+            const rawText = await configResponse.text();
+            const decodedText = decodeBase64Safe(rawText);
+            const vlessMatch = decodedText.match(/vless:\/\/([a-fA-F0-9\-]+)@[^?]+\?([^#\n\r]+)/);
+            
+            if (vlessMatch) {
+                const uuid = vlessMatch[1];
+                const params = vlessMatch[2];
+                const subDomain = getSelectedSubDomain();
+                const finalSubUrl = `https://${subDomain}/sub?uuid=${uuid}&${params}`;
+                return { success: true, url: finalSubUrl };
+            } else {
+                return { success: false, error: '解码内容未包含有效的 vless 节点信息' };
+            }
+        } catch (err) {
+            return { success: false, error: `深度解析失败: ${err.message}` };
+        }
     }
 
     const urlInput = document.getElementById('urlInput');
     const fetchBtn = document.getElementById('fetchBtn');
 
     fetchBtn.addEventListener('click', async () => {
-        const raw = urlInput.value.trim();
-        if (!raw) return;
-        
-        const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
-        
-        fetchBtn.disabled = true;
-        fetchBtn.textContent = '解析中...';
-        
-        const results = [];
-        for (const url of urls) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const code = await response.text();
-                const config = parseConfig(code);
-                if (config) {
-                    results.push({ success: true, url: buildUrl(config.domain, config.subPath) });
-                } else {
-                    results.push({ success: false, error: '未提取到配置参数' });
+        const activeTab = document.querySelector('.tab-btn.active').dataset.target;
+
+        if (activeTab === 'remotePanel') {
+            const raw = urlInput.value.trim();
+            if (!raw) return;
+            
+            const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
+            
+            fetchBtn.disabled = true;
+            fetchBtn.textContent = '深度解析中...';
+            
+            const results = [];
+            for (const url of urls) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const code = await response.text();
+                    const config = parseConfig(code);
+                    if (config) {
+                        const targetUrl = buildUrl(config.domain, config.subPath);
+                        const deepResult = await processAndFetchDeep(targetUrl);
+                        results.push(deepResult);
+                    } else {
+                        results.push({ success: false, error: '代码未提取到配置参数' });
+                    }
+                } catch (err) {
+                    results.push({ success: false, error: err.message });
                 }
-            } catch (err) {
-                results.push({ success: false, error: err.message });
             }
+            
+            renderAndAnimate(results);
+            fetchBtn.disabled = false;
+            fetchBtn.textContent = '获取订阅';
         }
-        
-        renderAndAnimate(results);
-        fetchBtn.disabled = false;
-        fetchBtn.textContent = '获取订阅';
     });
 
     urlInput.addEventListener('keydown', (e) => {
@@ -685,10 +811,13 @@
     });
 
     async function processLocalFiles(files) {
+        fetchBtn.disabled = true;
+        fetchBtn.textContent = '深度解析中...';
+        
         const results = [];
         for (const file of files) {
             if (!file.name.endsWith('.js') && !file.name.endsWith('.txt')) {
-                results.push({ success: false, error: '请上传 .js 文件' });
+                results.push({ success: false, error: '请上传 .js 或 .txt 文件' });
                 continue;
             }
             try {
@@ -701,7 +830,9 @@
                 
                 const config = parseConfig(text);
                 if (config) {
-                    results.push({ success: true, url: buildUrl(config.domain, config.subPath) });
+                    const targetUrl = buildUrl(config.domain, config.subPath);
+                    const deepResult = await processAndFetchDeep(targetUrl);
+                    results.push(deepResult);
                 } else {
                     results.push({ success: false, error: '未提取到配置' });
                 }
@@ -710,6 +841,8 @@
             }
         }
         renderAndAnimate(results);
+        fetchBtn.disabled = false;
+        fetchBtn.textContent = '获取订阅';
     }
 
     const tabBtns = document.querySelectorAll('.tab-btn');

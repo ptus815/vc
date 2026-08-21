@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀Edge</title>
+    <title>🚀Edge - 智能节点解析</title>
     <style>
         * {
             margin: 0;
@@ -28,9 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* -------------------------- */
         /* 保留：背景网格流动动画 */
-        /* -------------------------- */
         @keyframes gridMove {
             0% { background-position: 0 0; }
             100% { background-position: 40px 40px; }
@@ -99,11 +97,27 @@
             border-bottom: 1px solid rgba(255,255,255,0.15);
         }
         
-        body.white-theme .header { border-bottom-color: rgba(0,0,0,0.1); }
+        body.white-theme .header {
+            border-bottom-color: rgba(0,0,0,0.1);
+        }
 
-        .logo-area { display: flex; align-items: center; gap: 16px; }
-        .logo-svg { width: 42px; height: 42px; fill: currentColor; }
-        .logo-text { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo-svg {
+            width: 42px;
+            height: 42px;
+            fill: currentColor;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
 
         .theme-toggle {
             cursor: pointer;
@@ -126,9 +140,16 @@
         .sun-icon { display: none; }
         body.white-theme .moon-icon { display: none; }
         body.white-theme .sun-icon { display: block; }
-        .theme-toggle:hover svg { transform: scale(1.1); }
+        
+        .theme-toggle:hover svg {
+            transform: scale(1.1);
+        }
 
-        .tab-wrapper { display: flex; justify-content: flex-start; margin-bottom: 16px; }
+        .tab-wrapper {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 16px;
+        }
 
         .tab-group {
             display: inline-flex;
@@ -166,10 +187,19 @@
         .tab-btn:hover { color: rgba(255, 255, 255, 0.8); }
         body.white-theme .tab-btn:hover { color: rgba(0, 0, 0, 0.7); }
         
-        .tab-btn.active { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
-        body.white-theme .tab-btn.active { background: rgba(0, 0, 0, 0.05); color: #000000; }
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+        body.white-theme .tab-btn.active {
+            background: rgba(0, 0, 0, 0.05);
+            color: #000000;
+        }
 
-        .panel { display: none; animation: fadeIn 0.3s ease forwards; }
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s ease forwards;
+        }
         .panel.active { display: block; }
 
         @keyframes fadeIn {
@@ -196,7 +226,10 @@
             box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6);
         }
 
-        textarea::placeholder { color: rgba(255, 255, 255, 0.5); line-height: 1.8; }
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.8;
+        }
 
         textarea:focus {
             border-color: #3291ff;
@@ -226,98 +259,278 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
             backdrop-filter: blur(12px);
             border: 2px dashed rgba(255, 255, 255, 0.25);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s; color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #888;
             box-shadow: inset 0 0 20px rgba(255,255,255,0.02), 0 10px 30px -10px rgba(0,0,0,0.5);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         .upload-zone:hover, .upload-zone.drag-over {
-            border-color: #3291ff; color: #eaeaea; background: rgba(0, 112, 243, 0.08);
+            border-color: #3291ff;
+            color: #eaeaea;
+            background: rgba(0, 112, 243, 0.08);
             box-shadow: inset 0 0 30px rgba(0, 112, 243, 0.15), 0 0 20px rgba(0, 112, 243, 0.1);
         }
 
         body.white-theme .upload-zone {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-            border: 2px dashed rgba(0, 0, 0, 0.2); color: #666;
+            border: 2px dashed rgba(0, 0, 0, 0.2);
+            color: #666;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.02), 0 10px 30px -10px rgba(0,0,0,0.1);
         }
         body.white-theme .upload-zone:hover, body.white-theme .upload-zone.drag-over {
-            border-color: #0070f3; color: #111; background: rgba(0, 112, 243, 0.05);
+            border-color: #0070f3;
+            color: #111;
+            background: rgba(0, 112, 243, 0.05);
         }
 
-        .upload-icon { width: 42px; height: 42px; margin-bottom: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; transition: transform 0.3s; }
-        .upload-zone:hover .upload-icon { transform: translateY(-4px); color: #3291ff; }
-        .upload-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
-        .upload-subtitle { font-size: 13px; opacity: 0.5; font-family: ui-monospace, monospace; }
+        .upload-icon {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            transition: transform 0.3s;
+        }
+        .upload-zone:hover .upload-icon {
+            transform: translateY(-4px);
+            color: #3291ff;
+        }
+
+        .upload-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .upload-subtitle {
+            font-size: 13px;
+            opacity: 0.5;
+            font-family: ui-monospace, monospace;
+        }
 
         .settings-card {
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px; padding: 14px 18px; margin-top: 16px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            display: flex; justify-content: space-between; align-items: center; gap: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
         }
 
-        body.white-theme .settings-card { background: rgba(255, 255, 255, 0.8); border-color: rgba(0,0,0,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .setting-label { font-size: 14px; font-weight: 500; color: #eaeaea; white-space: nowrap; flex-shrink: 0; }
+        body.white-theme .settings-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #eaeaea;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
         body.white-theme .setting-label { color: #111111; }
 
         .setting-select {
-            flex: 1; max-width: 55%; background: #111111; color: #eaeaea; border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 8px 12px; border-radius: 8px; font-family: ui-monospace, Consolas, monospace; font-size: 13px;
-            outline: none; cursor: pointer; transition: border-color 0.3s; text-overflow: ellipsis;
+            flex: 1;
+            max-width: 55%;
+            background: #111111;
+            color: #eaeaea;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            text-overflow: ellipsis;
         }
-        body.white-theme .setting-select { background: #f4f5f7; color: #111111; border-color: rgba(0, 0, 0, 0.2); }
+        body.white-theme .setting-select {
+            background: #f4f5f7;
+            color: #111111;
+            border-color: rgba(0, 0, 0, 0.2);
+        }
         .setting-select:focus { border-color: #3291ff; }
 
-        .actions { display: flex; justify-content: flex-end; margin-bottom: 30px; }
-        .btn {
-            background: #ffffff; color: #000000; padding: 12px 42px; border-radius: 40px; border: none; cursor: pointer;
-            font-weight: 600; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15); outline: none;
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
         }
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25); }
-        .btn:disabled { opacity: 0.5; pointer-events: none; }
-        body.white-theme .btn { background: #000000; color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+        
+        .btn {
+            background: #ffffff;
+            color: #000000;
+            padding: 12px 42px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        body.white-theme .btn {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
         body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
 
-        .results { display: flex; flex-direction: column; gap: 16px; }
-        .result-item {
-            display: flex; align-items: center; padding: 18px 24px; border-radius: 12px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 112, 243, 0.4); box-shadow: 0 8px 24px rgba(0,0,0,0.6); position: relative; overflow: hidden;
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        .result-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3291ff; box-shadow: 0 0 12px #3291ff; }
-        body.white-theme .result-item { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 112, 243, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 112, 243, 0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3291ff;
+            box-shadow: 0 0 12px #3291ff;
+        }
+        body.white-theme .result-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 112, 243, 0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+
         @keyframes floatAndFade {
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-30px) scale(0.98); filter: blur(1px); }
         }
-        .result-item.fade-out { animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .result-item.fade-out {
+            animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
 
         .icon-box { margin-right: 18px; color: #3291ff; }
         .info-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .url { font-size: 14px; color: #eaeaea; font-family: ui-monospace, Consolas, monospace; font-weight: 500; word-break: break-all; text-decoration: none; line-height: 1.5; }
+        .url {
+            font-size: 14px;
+            color: #eaeaea;
+            font-family: ui-monospace, Consolas, monospace;
+            font-weight: 500;
+            word-break: break-all;
+            text-decoration: none;
+            line-height: 1.5;
+        }
         body.white-theme .url { color: #111; }
+        
         .auto-copy-tag { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3291ff; font-weight: 600; }
         .auto-copy-tag svg { width: 14px; height: 14px; }
+
         .result-item.fail { border-color: rgba(255, 50, 50, 0.4); }
         .result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; }
         .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; }
 
         .import-card {
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px;
-            padding: 24px; margin-top: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none; animation: fadeIn 0.4s ease;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+            animation: fadeIn 0.4s ease;
         }
-        body.white-theme .import-card { background: rgba(255, 255, 255, 0.9); border-color: rgba(0,0,0,0.15); box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
-        .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; }
+        body.white-theme .import-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        .import-header {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaeaea;
+            letter-spacing: 0.5px;
+        }
         body.white-theme .import-header { color: #111111; }
+
         .app-list { display: flex; flex-direction: column; gap: 12px; }
+
         .app-btn {
-            width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #eaeaea;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
-        body.white-theme .app-btn { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.1); color: #111111; }
-        .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); }
-        body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.05); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); }
+        body.white-theme .app-btn {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #111111;
+        }
+        .app-btn:hover {
+            border-color: #3291ff;
+            background: rgba(50, 145, 255, 0.08);
+            color: #3291ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15);
+        }
+        body.white-theme .app-btn:hover {
+            border-color: #0070f3;
+            background: rgba(0, 112, 243, 0.05);
+            color: #0070f3;
+            box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1);
+        }
+
         .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; }
 
@@ -332,7 +545,7 @@
 </head>
 <body>
 
-<!-- 全新：极致的 3D 数据星系 Canvas，用于复刻 Antigravity 特效 -->
+<!-- 重构后的真正 3D 同心环星系 Canvas -->
 <canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
 
 <div class="container">
@@ -375,7 +588,6 @@
     </div>
 
     <div class="panel active" id="remotePanel">
-        <!-- 提示词将由底部JS通过打字机特效自动注入 -->
         <textarea id="urlInput" placeholder=""></textarea>
     </div>
 
@@ -454,26 +666,26 @@
 
 <script>
     // ==========================================
-    // 3D Fibonacci 黄金螺旋数据星网特效 (同款 Antigravity 效果)
+    // 重构的 3D 同心圆星网粒子 (完美复刻 Antigravity 特效)
     // ==========================================
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
     
-    // 鼠标变量，用于聚光灯和星系的 Parallax (视差) 倾斜
-    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let targetRotX = 0;
-    let targetRotY = 0;
+    // 基础倾斜角度，让星系像一个倒扣的碗，营造纵深感
+    let targetPitch = -Math.PI / 5; 
+    let targetYaw = 0;
     
+    // 鼠标追踪
     document.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
         document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
         document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
         
-        // 计算目标旋转角度（鼠标越靠边缘，星系倾斜角度越大）
-        targetRotX = (e.clientY - height / 2) * 0.0005;
-        targetRotY = (e.clientX - width / 2) * 0.0005;
+        // 鼠标移动产生轻微的 3D 视差 (Parallax)
+        let normX = (e.clientX / width) - 0.5;
+        let normY = (e.clientY / height) - 0.5;
+        targetYaw = normX * 0.4;
+        targetPitch = -Math.PI / 5 + normY * 0.3;
     });
 
     function resizeCanvas() {
@@ -486,116 +698,126 @@
     window.addEventListener('resize', resizeCanvas);
 
     let particles = [];
-    let angleX = 0;
-    let angleY = 0;
     
-    // 初始化 3D 黄金螺旋球体粒子
     function initParticles() {
         particles = [];
-        const numParticles = 2000; // 极高密度的粒子数
-        const phi = Math.PI * (3 - Math.sqrt(5)); // 黄金角 (约137.5度)，用于完美均匀分布球面
+        const numRings = 50; // 构建 50 层同心圆环
+        const minRadius = 60; // 中间留出空洞，像黑洞一样
+        const maxRadius = Math.max(width, height) * 0.85; 
+        const radiusStep = (maxRadius - minRadius) / numRings;
         
-        // 构造多个同心球壳，制造深度感
-        const maxRadius = Math.max(width, height) * 0.6;
-        const shells = [maxRadius * 0.4, maxRadius * 0.65, maxRadius * 0.9, maxRadius * 1.15]; 
-        
-        shells.forEach((radius, shellIndex) => {
-            // 外层的球壳拥有更多的粒子
-            const shellParticles = Math.floor(numParticles * (radius / maxRadius)); 
-            for (let i = 0; i < shellParticles; i++) {
-                // Fibonacci 均匀分布球面计算
-                const y = 1 - (i / (shellParticles - 1)) * 2; // y 从 1 到 -1
-                const r = Math.sqrt(1 - y * y); // 当前高度的切面半径
-                const theta = phi * i; // 黄金角累加
+        for (let r = 0; r < numRings; r++) {
+            let radius = minRadius + r * radiusStep;
+            // 外圈周长更长，分配更多的粒子，保持密度均匀
+            let numPoints = Math.floor(2 * Math.PI * radius / 35); 
+            
+            for (let i = 0; i < numPoints; i++) {
+                let angle = (i / numPoints) * Math.PI * 2;
+                // 打破死板的网格感，加入轻微的随机角度偏移
+                angle += (Math.random() - 0.5) * (Math.PI * 2 / numPoints) * 0.6; 
                 
-                // 3D 坐标原点
-                const x = Math.cos(theta) * r;
-                const z = Math.sin(theta) * r;
-                
-                // 取色，高度还原图里的混合蓝色调
-                const colors = ['50, 145, 255', '138, 180, 248', '66, 133, 244', '255, 255, 255'];
+                // 蓝白色调混合
+                const colors = ['50, 145, 255', '138, 180, 248', '168, 199, 250'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 
                 particles.push({
-                    ox: x * radius,
-                    oy: y * radius,
-                    oz: z * radius,
-                    baseSize: Math.random() * 1.5 + 0.5,
-                    color: color
+                    radius: radius,
+                    angle: angle,
+                    // 内圈转速快，外圈转速慢 (开普勒轨道特征)
+                    speed: 0.001 + (1 - radius / maxRadius) * 0.0025, 
+                    zOffset: (Math.random() - 0.5) * 8, // 轻微的高低起伏
+                    dashLen: Math.random() * 8 + 4, // 粒子的长短
+                    color: color,
+                    baseAlpha: Math.random() * 0.7 + 0.3 // 基础透明度
                 });
             }
-        });
+        }
     }
+
+    // 核心 3D 旋转矩阵算法
+    function rotate3D(x, y, z, pitch, yaw) {
+        // 绕 X 轴旋转 (Pitch)
+        let y1 = y * Math.cos(pitch) - z * Math.sin(pitch);
+        let z1 = y * Math.sin(pitch) + z * Math.cos(pitch);
+        // 绕 Y 轴旋转 (Yaw)
+        let x2 = x * Math.cos(yaw) + z1 * Math.sin(yaw);
+        let z2 = -x * Math.sin(yaw) + z1 * Math.cos(yaw);
+        return { x: x2, y: y1, z: z2 };
+    }
+
+    let currentPitch = -Math.PI / 5;
+    let currentYaw = 0;
 
     function animateParticles() {
         ctx.clearRect(0, 0, width, height);
-        const isWhiteTheme = document.body.classList.contains('white-theme');
         
-        // 基础自转 + 鼠标跟随的交互旋转
-        angleX += 0.001; 
-        angleY += 0.002;
-        const totalRotX = angleX + targetRotX;
-        const totalRotY = angleY + targetRotY;
+        // 平滑过渡摄像机的视差角度
+        currentPitch += (targetPitch - currentPitch) * 0.05;
+        currentYaw += (targetYaw - currentYaw) * 0.05;
 
-        const cosX = Math.cos(totalRotX);
-        const sinX = Math.sin(totalRotX);
-        const cosY = Math.cos(totalRotY);
-        const sinY = Math.sin(totalRotY);
-
-        const focalLength = 1000;
+        const isWhiteTheme = document.body.classList.contains('white-theme');
         const cx = width / 2;
-        const cy = height / 2;
+        const cy = height / 2 + 100; // 让星系中心稍微偏下
+        const focalLength = 900; // 焦距，控制 3D 透视的畸变强度
 
         for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
+            let p = particles[i];
             
-            // 绕 X 轴旋转
-            const y1 = p.oy * cosX - p.oz * sinX;
-            const z1 = p.oy * sinX + p.oz * cosX;
+            // 粒子沿着圆环公转
+            p.angle -= p.speed;
             
-            // 绕 Y 轴旋转
-            const x2 = p.ox * cosY + z1 * sinY;
-            const z2 = -p.ox * sinY + z1 * cosY;
-            const y2 = y1;
+            // 1. 计算粒子在 3D 空间中的基础坐标 (平放的同心圆)
+            let x = Math.cos(p.angle) * p.radius;
+            let y = Math.sin(p.angle) * p.radius;
+            // 制造一个浅浅的抛物线“碗”状曲面，增强星空的纵深感
+            let z = p.zOffset - (p.radius * p.radius) / 2500; 
             
-            // 将 Z 轴推远，应用透视投影 (Perspective Projection)
-            const z = z2 + focalLength; 
+            // 2. ！！！关键点！！！ 计算圆的切线向量 (Tangent)
+            // 切线是垂直于半径的，这保证了短线段完美贴合圆弧
+            let tx = -Math.sin(p.angle);
+            let ty = Math.cos(p.angle);
+            let tz = 0;
             
-            if (z > 100) { // 如果粒子在相机前面
-                const scale = focalLength / z;
-                const px = cx + x2 * scale;
-                const py = cy + y2 * scale;
+            // 3. 同时对坐标和切线应用 3D 旋转
+            let pRot = rotate3D(x, y, z, currentPitch, currentYaw);
+            let tRot = rotate3D(tx, ty, tz, currentPitch, currentYaw);
+            
+            let zPos = pRot.z + focalLength;
+            if (zPos > 20) {
+                // 4. 将 3D 起点投射到 2D 屏幕
+                let scale = focalLength / zPos;
+                let px = cx + pRot.x * scale;
+                let py = cy + pRot.y * scale;
                 
-                // 根据深度(Z)和主题计算透明度：远处的粒子逐渐消失，产生 3D 纵深感
-                let baseAlpha = Math.min(1, Math.max(0.1, (scale - 0.4) * 2.5));
-                if (isWhiteTheme) baseAlpha *= 0.6; // 亮色模式下降低不透明度防止刺眼
+                // 5. 计算 3D 终点，然后投射到 2D 屏幕
+                let pEndRot = {
+                    x: pRot.x + tRot.x * p.dashLen,
+                    y: pRot.y + tRot.y * p.dashLen,
+                    z: pRot.z + tRot.z * p.dashLen
+                };
+                let zEndPos = pEndRot.z + focalLength;
+                let scaleEnd = focalLength / zEndPos;
+                let pxEnd = cx + pEndRot.x * scaleEnd;
+                let pyEnd = cy + pEndRot.y * scaleEnd;
                 
-                // 核心技巧：沿着圆弧方向画一段线（Dash 切线），而不是画圆圈。这正是原图的精髓！
-                const dx = px - cx;
-                const dy = py - cy;
-                const distToCenter = Math.sqrt(dx * dx + dy * dy);
+                // 根据远近计算透明度，远处的粒子渐渐隐去
+                let alpha = p.baseAlpha * scale * 1.2;
+                if (isWhiteTheme) alpha *= 0.6; // 白天模式下稍微淡一点
+                if (alpha > 1) alpha = 1;
                 
-                if (distToCenter > 1) {
-                    // 计算垂直于半径的切线向量 (Tangent Vector)
-                    const tx = -dy / distToCenter;
-                    const ty = dx / distToCenter;
-                    
-                    // 随着距离变远，线段（Dash）变长，营造运动模糊的拖尾感
-                    const dashLen = (2 + (1 - scale) * 8) * (isWhiteTheme ? 0.8 : 1);
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(px - tx * dashLen, py - ty * dashLen);
-                    ctx.lineTo(px + tx * dashLen, py + ty * dashLen);
-                    
-                    // 根据主题调整颜色如果是白色主题，替换掉偏白的粒子避免看不见
-                    let finalColor = p.color;
-                    if (isWhiteTheme && finalColor === '255, 255, 255') finalColor = '0, 112, 243';
-                    
-                    ctx.lineWidth = p.baseSize * scale;
-                    ctx.strokeStyle = `rgba(${finalColor}, ${baseAlpha})`;
-                    ctx.lineCap = 'round';
-                    ctx.stroke();
-                }
+                let finalColor = p.color;
+                // 白天模式下，把太浅的蓝色加深，防止看不清
+                if (isWhiteTheme && finalColor === '168, 199, 250') finalColor = '0, 112, 243';
+                
+                // 画出这段完美贴合 3D 圆弧的虚线切线
+                ctx.beginPath();
+                ctx.moveTo(px, py);
+                ctx.lineTo(pxEnd, pyEnd);
+                // 远处的线变细，近处的线变粗，增强 3D 感
+                ctx.lineWidth = Math.max(0.5, 2.5 * scale); 
+                ctx.strokeStyle = `rgba(${finalColor}, ${alpha})`;
+                ctx.lineCap = 'round';
+                ctx.stroke();
             }
         }
         requestAnimationFrame(animateParticles);
@@ -632,7 +854,7 @@
 
 
     // ==========================================
-    // 核心业务逻辑 (保持完全不变)
+    // 核心业务逻辑 (保持原有逻辑完全不变)
     // ==========================================
     let currentFinalSubUrl = '';
 
@@ -691,8 +913,14 @@
     }
 
     function decodeBase64Safe(str) {
-        try { return decodeURIComponent(escape(atob(str))); } catch(e) {
-            try { return atob(str); } catch(e2) { return str; }
+        try {
+            return decodeURIComponent(escape(atob(str)));
+        } catch(e) {
+            try {
+                return atob(str);
+            } catch(e2) {
+                return str;
+            }
         }
     }
 
@@ -700,7 +928,14 @@
         const select = document.getElementById('subDomainSelect');
         let val = select.value;
         if (val === 'random') {
-            const subs = [ 'owo.o00o.ooo', 'sub.eooce.xx.kg', 'zrf.zrf.me', 'sub.keaeye.icu', 'sub.mot.cloudns.biz', 'sub.bbc.xx.kg' ];
+            const subs = [
+                'owo.o00o.ooo',
+                'sub.eooce.xx.kg',
+                'zrf.zrf.me',
+                'sub.keaeye.icu',
+                'sub.mot.cloudns.biz',
+                'sub.bbc.xx.kg'
+            ];
             val = subs[Math.floor(Math.random() * subs.length)];
         }
         return val;
@@ -708,8 +943,11 @@
 
     function copyToClipboard(text) {
         const ta = document.createElement('textarea');
-        ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
-        document.body.appendChild(ta); ta.select();
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
         try { document.execCommand('copy'); } catch (err) {}
         document.body.removeChild(ta);
     }

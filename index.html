@@ -73,18 +73,18 @@
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
         
         .logo-svg {
-            width: 28px;
-            height: 28px;
+            width: 42px;
+            height: 42px;
             fill: currentColor;
         }
         
         .logo-text {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             letter-spacing: -0.02em;
         }
 
@@ -92,37 +92,37 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
             -webkit-tap-highlight-color: transparent;
         }
         
-        .toggle-track {
-            width: 44px;
-            height: 24px;
-            background: transparent;
-            border-radius: 30px;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.25);
+        .theme-toggle svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
         
-        .toggle-thumb {
-            width: 18px;
-            height: 18px;
-            background: #ffffff;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
+        .moon-icon {
+            display: block;
         }
         
-        body.white-theme .toggle-track {
-            border-color: rgba(0,0,0,0.2);
+        .sun-icon {
+            display: none;
         }
         
-        body.white-theme .toggle-thumb {
-            transform: translateX(20px);
-            background: #000000;
+        body.white-theme .moon-icon {
+            display: none;
+        }
+        
+        body.white-theme .sun-icon {
+            display: block;
+        }
+        
+        .theme-toggle:hover svg {
+            transform: scale(1.1);
         }
 
         .tab-wrapper {
@@ -313,6 +313,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
         }
 
         body.white-theme .settings-card {
@@ -325,6 +326,8 @@
             font-size: 14px;
             font-weight: 500;
             color: #eaeaea;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         body.white-theme .setting-label {
@@ -332,6 +335,8 @@
         }
 
         .setting-select {
+            flex: 1;
+            max-width: 55%;
             background: #111111;
             color: #eaeaea;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -342,6 +347,7 @@
             outline: none;
             cursor: pointer;
             transition: border-color 0.3s;
+            text-overflow: ellipsis;
         }
 
         body.white-theme .setting-select {
@@ -500,9 +506,87 @@
             font-family: ui-monospace, monospace;
         }
 
+        .import-card {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        body.white-theme .import-card {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        .import-header {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #eaeaea;
+            letter-spacing: 0.5px;
+        }
+
+        body.white-theme .import-header {
+            color: #111111;
+        }
+
+        .app-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .app-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #eaeaea;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body.white-theme .app-btn {
+            border-color: rgba(0,0,0,0.15);
+            color: #111111;
+        }
+
+        .app-btn:hover {
+            border-color: #3291ff;
+            color: #3291ff;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(50, 145, 255, 0.2);
+        }
+
+        body.white-theme .app-btn:hover {
+            border-color: #0070f3;
+            color: #0070f3;
+            box-shadow: 0 6px 12px rgba(0, 112, 243, 0.15);
+        }
+
+        .app-btn svg {
+            width: 26px;
+            height: 26px;
+        }
+
         @media (max-width: 600px) {
             .container { padding: 0 8px; }
             textarea, .upload-zone { min-height: 180px; }
+            .app-btn { width: 50px; height: 50px; }
+            .app-btn svg { width: 22px; height: 22px; }
         }
     </style>
 </head>
@@ -514,7 +598,20 @@
             <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 2,22 22,22" /></svg>
             <span class="logo-text">Vercel</span>
         </div>
-        <div class="theme-toggle" id="themeToggle"><div class="toggle-track"><div class="toggle-thumb"></div></div></div>
+        <div class="theme-toggle" id="themeToggle">
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </div>
     </div>
 
     <div class="tab-wrapper">
@@ -569,9 +666,33 @@
     </div>
 
     <div class="results" id="resultsContainer"></div>
+
+    <div class="import-card" id="importCard">
+        <div class="import-header">一键导入订阅至 App</div>
+        <div class="app-grid">
+            <button class="app-btn" data-scheme="clash://install-config?url=" title="导入到 Clash Meta">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4l8 8 8-8v16"/></svg>
+            </button>
+            <button class="app-btn" data-scheme="surfboard:///install-config?url=" title="导入到 Surfboard">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l7 7-7 7M13 5l7 7-7 7"/></svg>
+            </button>
+            <button class="app-btn" data-scheme="sing-box://import-remote-profile?url=" title="导入到 Sing-box">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </button>
+            <button class="app-btn" data-scheme="hiddify://install-config?url=" title="导入到 Hiddify">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 14h4v6H4zm6-6h4v12h-4zm6-4h4v16h-4z"/></svg>
+            </button>
+            <button class="app-btn" data-scheme="nekobox://install-config?url=" title="导入到 NekoBox">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 14h.01M16 14h.01M9 8 7 3l4 3M15 8l2-5-4 3M12 18s-1.5-2-1.5-2h3s-1.5 2-1.5 2z"/></svg>
+            </button>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    let currentFinalSubUrl = '';
+
     function unescapeUnicode(str) {
         return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
     }
@@ -667,10 +788,13 @@
     }
 
     const resultsContainer = document.getElementById('resultsContainer');
+    const importCard = document.getElementById('importCard');
     let clearTimer = null;
 
     function renderAndAnimate(results) {
         resultsContainer.innerHTML = '';
+        importCard.style.display = 'none';
+        currentFinalSubUrl = '';
         clearTimeout(clearTimer);
         
         let html = '';
@@ -699,7 +823,9 @@
         resultsContainer.innerHTML = html;
         
         if (successfulUrls.length > 0) {
+            currentFinalSubUrl = successfulUrls[0];
             copyToClipboard(successfulUrls.join('\n'));
+            importCard.style.display = 'block';
         }
 
         clearTimer = setTimeout(() => {
@@ -711,14 +837,12 @@
         }, 3000);
     }
 
-    // 利用代理突破浏览器跨域限制
     function getProxyUrl(url) {
         return 'https://corsproxy.io/?' + encodeURIComponent(url);
     }
 
     async function processAndFetchDeep(urlStr) {
         try {
-            // 使用 CORS 代理去请求节点服务器，避免浏览器拦截
             const configResponse = await fetch(getProxyUrl(urlStr));
             if (!configResponse.ok) throw new Error(`HTTP ${configResponse.status}`);
             
@@ -758,7 +882,6 @@
             const results = [];
             for (const url of urls) {
                 try {
-                    // 第一步解析同样加上代理，防止遇到某些不支持跨域的 GitHub 镜像站
                     const response = await fetch(getProxyUrl(url));
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const code = await response.text();
@@ -866,6 +989,14 @@
 
     document.getElementById('themeToggle').addEventListener('click', () => {
         document.body.classList.toggle('white-theme');
+    });
+
+    document.querySelectorAll('.app-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!currentFinalSubUrl) return;
+            const scheme = this.dataset.scheme;
+            window.location.href = scheme + encodeURIComponent(currentFinalSubUrl);
+        });
     });
 </script>
 </body>

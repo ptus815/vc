@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀Edge</title>
+    <title>🚀Edge - 智能节点解析</title>
     <style>
         * {
             margin: 0;
@@ -12,6 +12,10 @@
         }
 
         body {
+            /* 添加 CSS 变量用于鼠标光晕追踪 */
+            --mouse-x: 50vw;
+            --mouse-y: 50vh;
+            
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -21,6 +25,13 @@
             transition: background 0.4s ease, color 0.4s ease;
             background: #000000;
             color: #eaeaea;
+            overflow-x: hidden;
+        }
+
+        /* 网格流动动画 */
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
         }
 
         body::before {
@@ -37,6 +48,22 @@
             pointer-events: none;
             z-index: 0;
             transition: background-image 0.4s ease;
+            /* 让网格进行 15秒 的无限匀速循环滚动 */
+            animation: gridMove 15s linear infinite; 
+        }
+
+        /* 鼠标跟随的高科技光晕扩散层 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
+            background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(50, 145, 255, 0.08), transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.4s ease;
         }
 
         body.white-theme::before {
@@ -45,14 +72,19 @@
                 linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
         }
 
+        body.white-theme::after {
+            background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(0, 112, 243, 0.05), transparent 80%);
+        }
+
         body.white-theme {
             background: #ffffff;
             color: #111111;
         }
 
+        /* 提升主容器层级，确保在特效层上方 */
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             width: 100%;
             max-width: 800px;
         }
@@ -105,21 +137,10 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
         
-        .moon-icon {
-            display: block;
-        }
-        
-        .sun-icon {
-            display: none;
-        }
-        
-        body.white-theme .moon-icon {
-            display: none;
-        }
-        
-        body.white-theme .sun-icon {
-            display: block;
-        }
+        .moon-icon { display: block; }
+        .sun-icon { display: none; }
+        body.white-theme .moon-icon { display: none; }
+        body.white-theme .sun-icon { display: block; }
         
         .theme-toggle:hover svg {
             transform: scale(1.1);
@@ -133,7 +154,8 @@
 
         .tab-group {
             display: inline-flex;
-            background: #000000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 4px;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -142,7 +164,7 @@
         }
 
         body.white-theme .tab-group {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.6);
             border-color: rgba(0, 0, 0, 0.15);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -162,25 +184,16 @@
             outline: none;
         }
 
-        body.white-theme .tab-btn {
-            color: rgba(0, 0, 0, 0.3);
-        }
-
-        .tab-btn:hover {
-            color: rgba(255, 255, 255, 0.8);
-        }
+        body.white-theme .tab-btn { color: rgba(0, 0, 0, 0.3); }
+        .tab-btn:hover { color: rgba(255, 255, 255, 0.8); }
+        body.white-theme .tab-btn:hover { color: rgba(0, 0, 0, 0.7); }
         
-        body.white-theme .tab-btn:hover {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
         .tab-btn.active {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
-
         body.white-theme .tab-btn.active {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.05);
             color: #000000;
         }
 
@@ -188,10 +201,7 @@
             display: none;
             animation: fadeIn 0.3s ease forwards;
         }
-        
-        .panel.active {
-            display: block;
-        }
+        .panel.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
@@ -207,6 +217,7 @@
             resize: vertical;
             min-height: 220px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             border-left: 1px solid rgba(255, 255, 255, 0.25);
@@ -217,7 +228,7 @@
         }
 
         textarea::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.4);
             line-height: 1.8;
         }
 
@@ -228,21 +239,17 @@
         }
 
         body.white-theme textarea {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.01) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
             border: 1px solid rgba(0, 0, 0, 0.15);
             border-top: 1px solid rgba(255, 255, 255, 0.8);
             border-left: 1px solid rgba(255, 255, 255, 0.5);
             color: #111111;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.02), 0 10px 30px -10px rgba(0,0,0,0.1);
         }
-
-        body.white-theme textarea::placeholder {
-            color: rgba(0, 0, 0, 0.3);
-        }
-
+        body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); }
         body.white-theme textarea:focus {
             border-color: #0070f3;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
             box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15);
         }
 
@@ -251,6 +258,7 @@
             min-height: 220px;
             border-radius: 16px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(12px);
             border: 2px dashed rgba(255, 255, 255, 0.25);
             display: flex;
             flex-direction: column;
@@ -272,12 +280,11 @@
         }
 
         body.white-theme .upload-zone {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.01) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
             border: 2px dashed rgba(0, 0, 0, 0.2);
             color: #666;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.02), 0 10px 30px -10px rgba(0,0,0,0.1);
         }
-
         body.white-theme .upload-zone:hover, body.white-theme .upload-zone.drag-over {
             border-color: #0070f3;
             color: #111;
@@ -293,7 +300,6 @@
             stroke-width: 1.5;
             transition: transform 0.3s;
         }
-
         .upload-zone:hover .upload-icon {
             transform: translateY(-4px);
             color: #3291ff;
@@ -304,7 +310,6 @@
             font-weight: 500;
             margin-bottom: 8px;
         }
-        
         .upload-subtitle {
             font-size: 13px;
             opacity: 0.5;
@@ -312,7 +317,8 @@
         }
 
         .settings-card {
-            background: #000000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 14px 18px;
@@ -326,7 +332,7 @@
         }
 
         body.white-theme .settings-card {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.8);
             border-color: rgba(0,0,0,0.15);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -338,10 +344,7 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-        
-        body.white-theme .setting-label {
-            color: #111111;
-        }
+        body.white-theme .setting-label { color: #111111; }
 
         .setting-select {
             flex: 1;
@@ -358,16 +361,12 @@
             transition: border-color 0.3s;
             text-overflow: ellipsis;
         }
-
         body.white-theme .setting-select {
             background: #f4f5f7;
             color: #111111;
             border-color: rgba(0, 0, 0, 0.2);
         }
-
-        .setting-select:focus {
-            border-color: #3291ff;
-        }
+        .setting-select:focus { border-color: #3291ff; }
 
         .actions {
             display: flex;
@@ -389,12 +388,10 @@
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
-        
         .btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
         }
-        
         .btn:disabled {
             opacity: 0.5;
             pointer-events: none;
@@ -405,10 +402,7 @@
             color: #ffffff;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        
-        body.white-theme .btn:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-        }
+        body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
 
         .results {
             display: flex;
@@ -421,7 +415,8 @@
             align-items: center;
             padding: 18px 24px;
             border-radius: 12px;
-            background: #000000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 112, 243, 0.4);
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
             opacity: 1;
@@ -429,7 +424,6 @@
             position: relative;
             overflow: hidden;
         }
-        
         .result-item::before {
             content: '';
             position: absolute;
@@ -440,9 +434,8 @@
             background: #3291ff;
             box-shadow: 0 0 12px #3291ff;
         }
-
         body.white-theme .result-item {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0, 112, 243, 0.3);
             box-shadow: 0 8px 24px rgba(0,0,0,0.06);
         }
@@ -451,7 +444,6 @@
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-30px) scale(0.98); filter: blur(1px); }
         }
-        
         .result-item.fade-out {
             animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -460,14 +452,12 @@
             margin-right: 18px;
             color: #3291ff;
         }
-        
         .info-group {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
-        
         .url {
             font-size: 14px;
             color: #eaeaea;
@@ -477,10 +467,7 @@
             text-decoration: none;
             line-height: 1.5;
         }
-        
-        body.white-theme .url {
-            color: #111;
-        }
+        body.white-theme .url { color: #111; }
         
         .auto-copy-tag {
             display: flex;
@@ -490,25 +477,11 @@
             color: #3291ff;
             font-weight: 600;
         }
-        
-        .auto-copy-tag svg {
-            width: 14px;
-            height: 14px;
-        }
+        .auto-copy-tag svg { width: 14px; height: 14px; }
 
-        .result-item.fail {
-            border-color: rgba(255, 50, 50, 0.4);
-        }
-        
-        .result-item.fail::before {
-            background: #ff3333;
-            box-shadow: 0 0 12px #ff3333;
-        }
-        
-        .result-item.fail .icon-box {
-            color: #ff3333;
-        }
-        
+        .result-item.fail { border-color: rgba(255, 50, 50, 0.4); }
+        .result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; }
+        .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg {
             font-size: 14px;
             color: #ff5555;
@@ -516,7 +489,8 @@
         }
 
         .import-card {
-            background: #000000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 24px;
@@ -525,9 +499,8 @@
             display: none;
             animation: fadeIn 0.4s ease;
         }
-
         body.white-theme .import-card {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             border-color: rgba(0,0,0,0.15);
             box-shadow: 0 8px 24px rgba(0,0,0,0.05);
         }
@@ -540,10 +513,7 @@
             color: #eaeaea;
             letter-spacing: 0.5px;
         }
-
-        body.white-theme .import-header {
-            color: #111111;
-        }
+        body.white-theme .import-header { color: #111111; }
 
         .app-list {
             display: flex;
@@ -566,13 +536,11 @@
             outline: none;
             -webkit-tap-highlight-color: transparent;
         }
-
         body.white-theme .app-btn {
             background: rgba(0, 0, 0, 0.02);
             border-color: rgba(0, 0, 0, 0.1);
             color: #111111;
         }
-
         .app-btn:hover {
             border-color: #3291ff;
             background: rgba(50, 145, 255, 0.08);
@@ -580,7 +548,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15);
         }
-
         body.white-theme .app-btn:hover {
             border-color: #0070f3;
             background: rgba(0, 112, 243, 0.05);
@@ -594,7 +561,6 @@
             flex-shrink: 0;
             stroke-width: 2;
         }
-
         .app-name {
             font-size: 15px;
             font-weight: 500;
@@ -611,6 +577,9 @@
     </style>
 </head>
 <body>
+
+<!-- 新增：交互式底层粒子星网 -->
+<canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
 
 <div class="container">
     <div class="header">
@@ -652,7 +621,8 @@
     </div>
 
     <div class="panel active" id="remotePanel">
-        <textarea id="urlInput" placeholder="在此粘贴远程 .js 文件链接，&#10;或直接粘贴 vless://、trojan://、vmess:// 等原生节点链接...&#10;支持批量，每行一个"></textarea>
+        <!-- 注意：这里的 placeholder 留空，将由 JS 的打字机特效接管 -->
+        <textarea id="urlInput" placeholder=""></textarea>
     </div>
 
     <div class="panel" id="localPanel">
@@ -726,10 +696,145 @@
             </button>
         </div>
     </div>
-
 </div>
 
 <script>
+    // ==========================================
+    // 鼠标联动光晕与 Canvas 粒子星网背景
+    // ==========================================
+    const mouse = { x: -1000, y: -1000 };
+    
+    // 追踪鼠标位置，修改 CSS 变量以控制背景手电筒光晕
+    document.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
+        document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
+    });
+
+    document.addEventListener('mouseout', () => {
+        mouse.x = -1000;
+        mouse.y = -1000;
+    });
+
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        initParticles();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.6; // 随机漂浮速度
+            this.vy = (Math.random() - 0.5) * 0.6;
+            this.radius = Math.random() * 1.5 + 0.5; // 节点大小
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            // 边缘反弹
+            if (this.x < 0 || this.x > width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > height) this.vy = -this.vy;
+
+            // 与鼠标的物理排斥效果（引力场）
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+                this.x -= dx * 0.015; // 距离越近，排斥越快
+                this.y -= dy * 0.015;
+            }
+        }
+        draw(isWhiteTheme) {
+            ctx.fillStyle = isWhiteTheme ? 'rgba(0, 112, 243, 0.4)' : 'rgba(50, 145, 255, 0.5)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        // 动态计算粒子数量，保证不同屏幕下密度适中
+        const numParticles = Math.floor((width * height) / 12000); 
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        const isWhiteTheme = document.body.classList.contains('white-theme');
+        const lineColor = isWhiteTheme ? '0, 112, 243' : '50, 145, 255';
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw(isWhiteTheme);
+
+            // 当鼠标靠近时，粒子与鼠标之间产生数据连线
+            const dx = mouse.x - particles[i].x;
+            const dy = mouse.y - particles[i].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 180) {
+                ctx.beginPath();
+                // 距离越近，线条越清晰
+                ctx.strokeStyle = `rgba(${lineColor}, ${0.4 * (1 - dist / 180)})`; 
+                ctx.lineWidth = 1;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.stroke();
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    resizeCanvas();
+    animateParticles();
+
+
+    // ==========================================
+    // 科技感打字机效果 (Placeholder 终端打印)
+    // ==========================================
+    const urlInput = document.getElementById('urlInput');
+    const promptText = "在此粘贴远程 .js 文件链接，\n或直接粘贴 vless://、trojan://、vmess:// 等原生节点链接...\n支持批量，每行一个";
+    let charIndex = 0;
+    
+    function typeWriterEffect() {
+        if (charIndex < promptText.length) {
+            // 末尾增加下划线光标模拟敲代码
+            urlInput.setAttribute('placeholder', promptText.substring(0, charIndex + 1) + '_');
+            charIndex++;
+            // 随机延迟（30~70毫秒）模拟真实敲击节奏
+            setTimeout(typeWriterEffect, Math.random() * 40 + 30);
+        } else {
+            // 打印完成后，光标闪烁 3 次后消失
+            let blinkCount = 0;
+            const blinkInterval = setInterval(() => {
+                blinkCount++;
+                urlInput.setAttribute('placeholder', (blinkCount % 2 === 0) ? promptText + '_' : promptText);
+                if (blinkCount >= 6) {
+                    clearInterval(blinkInterval);
+                    urlInput.setAttribute('placeholder', promptText); // 定格
+                }
+            }, 400);
+        }
+    }
+    // 延迟 0.6 秒后再触发打字动画，体验更好
+    setTimeout(typeWriterEffect, 600);
+
+
+    // ==========================================
+    // 核心业务逻辑 (保持原有逻辑不变)
+    // ==========================================
     let currentFinalSubUrl = '';
 
     function unescapeUnicode(str) {
@@ -913,7 +1018,6 @@
         }
     }
 
-    const urlInput = document.getElementById('urlInput');
     const fetchBtn = document.getElementById('fetchBtn');
 
     fetchBtn.addEventListener('click', async () => {

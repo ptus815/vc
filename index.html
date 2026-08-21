@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>订阅链接提取 | 终极科技版</title>
+    <title>节点</title>
     <style>
         * {
             margin: 0;
@@ -550,9 +550,9 @@
     </div>
 
     <div class="settings-card">
-        <span class="setting-label">优选订阅器 (sub域名)</span>
+        <span class="setting-label">优选订阅器</span>
         <select class="setting-select" id="subDomainSelect">
-            <option value="random">🎲 随机优选分配</option>
+            <option value="random">🎲 任意随机匹配</option>
             <option value="owo.o00o.ooo">owo.o00o.ooo</option>
             <option value="cm.soso.edu.kg">cm.soso.edu.kg (周润发)</option>
             <option value="zrf.zrf.me">zrf.zrf.me (周润发)</option>
@@ -711,9 +711,15 @@
         }, 3000);
     }
 
+    // 利用代理突破浏览器跨域限制
+    function getProxyUrl(url) {
+        return 'https://corsproxy.io/?' + encodeURIComponent(url);
+    }
+
     async function processAndFetchDeep(urlStr) {
         try {
-            const configResponse = await fetch(urlStr);
+            // 使用 CORS 代理去请求节点服务器，避免浏览器拦截
+            const configResponse = await fetch(getProxyUrl(urlStr));
             if (!configResponse.ok) throw new Error(`HTTP ${configResponse.status}`);
             
             const rawText = await configResponse.text();
@@ -730,7 +736,7 @@
                 return { success: false, error: '解码内容未包含有效的 vless 节点信息' };
             }
         } catch (err) {
-            return { success: false, error: `深度解析失败: ${err.message}` };
+            return { success: false, error: `跨域请求拦截或解析失败: ${err.message}` };
         }
     }
 
@@ -752,7 +758,8 @@
             const results = [];
             for (const url of urls) {
                 try {
-                    const response = await fetch(url);
+                    // 第一步解析同样加上代理，防止遇到某些不支持跨域的 GitHub 镜像站
+                    const response = await fetch(getProxyUrl(url));
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const code = await response.text();
                     const config = parseConfig(code);
@@ -764,7 +771,7 @@
                         results.push({ success: false, error: '代码未提取到配置参数' });
                     }
                 } catch (err) {
-                    results.push({ success: false, error: err.message });
+                    results.push({ success: false, error: `加载失败: ${err.message}` });
                 }
             }
             

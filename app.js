@@ -209,7 +209,7 @@
     `;
 
     // ==========================================
-    // 
+    // 3. 将 CSS 和 HTML 注入 DOM
     // ==========================================
     const styleEl = document.createElement('style');
     styleEl.innerHTML = appCSS;
@@ -217,7 +217,7 @@
     document.body.innerHTML += appHTML;
 
     // ==========================================
-    // 
+    // 4. 所有的 JS 交互逻辑
     // ==========================================
     setTimeout(() => {
         const mouse = { x: -1000, y: -1000 };

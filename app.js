@@ -1,6 +1,155 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const appCSS = `* { margin: 0; padding: 0; box-sizing: border-box; } body { --mouse-x: 50vw; --mouse-y: 50vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 8vh 20px 40px 20px; transition: background 0.4s ease, color 0.4s ease; background: #000000; color: #eaeaea; overflow-x: hidden; } @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } } body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; transition: background-image 0.4s ease; animation: gridMove 15s linear infinite; } body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(50, 145, 255, 0.08), transparent 80%); pointer-events: none; z-index: 0; transition: background 0.4s ease; } body.white-theme::before { background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); } body.white-theme::after { background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(0, 112, 243, 0.05), transparent 80%); } body.white-theme { background: #ffffff; color: #111111; } .container { position: relative; z-index: 2; width: 100%; max-width: 800px; } .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); } body.white-theme .header { border-bottom-color: rgba(0,0,0,0.1); } .logo-area { display: flex; align-items: center; gap: 16px; } .logo-svg { width: 42px; height: 42px; fill: currentColor; } .logo-text { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; } .theme-toggle { cursor: pointer; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; -webkit-tap-highlight-color: transparent; } .theme-toggle svg { width: 32px; height: 32px; fill: currentColor; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s; } .moon-icon { display: block; } .sun-icon { display: none; } body.white-theme .moon-icon { display: none; } body.white-theme .sun-icon { display: block; } .theme-toggle:hover svg { transform: scale(1.1); } @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } } textarea { width: 100%; padding: 22px 24px; font-size: 15px; font-family: ui-monospace, Consolas, monospace; border-radius: 16px; resize: vertical; min-height: 320px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3); border-left: 1px solid rgba(255, 255, 255, 0.25); color: #eaeaea; outline: none; transition: all 0.3s; box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6); } textarea::placeholder { color: rgba(255, 255, 255, 0.4); line-height: 1.8; } textarea:focus { border-color: #3291ff; background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.1), 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.8); } body.white-theme textarea { background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%); border: 1px solid rgba(255, 255, 255, 0.6); border-top: 1px solid rgba(255, 255, 255, 0.8); border-left: 1px solid rgba(255, 255, 255, 0.5); color: #111111; box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05); } body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); } body.white-theme textarea:focus { border-color: #0070f3; background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15); } .settings-card { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 14px 18px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center; gap: 16px; position: relative; z-index: 99; } body.white-theme .settings-card { background: rgba(255, 255, 255, 0.65); border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0,0,0,0.05); } .setting-label { font-size: 14px; font-weight: 500; color: #eaeaea; white-space: nowrap; flex-shrink: 0; } body.white-theme .setting-label { color: #111111; } .custom-select-wrapper { flex: 1; max-width: 55%; position: relative; } .custom-select-trigger { background: #111111; color: #eaeaea; border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 12px; border-radius: 8px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; user-select: none; } body.white-theme .custom-select-trigger { background: rgba(255, 255, 255, 0.8); color: #111111; border-color: rgba(0, 0, 0, 0.15); } .custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger { border-color: #3291ff; } body.white-theme .custom-select-trigger:hover, body.white-theme .custom-select-wrapper.open .custom-select-trigger { border-color: #0070f3; } .custom-select-trigger svg { transition: transform 0.3s ease; opacity: 0.7; } .custom-select-wrapper.open .custom-select-trigger svg { transform: rotate(180deg); } .custom-options { position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; } .custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0); } body.white-theme .custom-options { background: rgba(255, 255, 255, 0.85); border-color: rgba(0, 0, 0, 0.1); box-shadow: 0 12px 32px rgba(0,0,0,0.1); } .custom-option { padding: 12px 16px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; cursor: pointer; color: rgba(255, 255, 255, 0.8); transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; } body.white-theme .custom-option { color: #333; } .custom-option:hover, .custom-option.selected { background: rgba(50, 145, 255, 0.15); color: #3291ff; } body.white-theme .custom-option:hover, body.white-theme .custom-option.selected { background: rgba(0, 112, 243, 0.08); color: #0070f3; } .custom-option::after { content: ''; width: 8px; height: 14px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) scale(0); transition: transform 0.2s; opacity: 0; margin-bottom: 4px; } .custom-option.selected::after { transform: rotate(45deg) scale(1); opacity: 1; } .actions { display: flex; justify-content: flex-end; margin-bottom: 30px; gap: 16px; flex-wrap: wrap; } .btn { background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 40px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15); -webkit-tap-highlight-color: transparent; outline: none; flex: 1; min-width: 120px; text-align: center; } .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25); } .btn:disabled { opacity: 0.5; pointer-events: none; } body.white-theme .btn { background: #000000; color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); } body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); } #getRandomLinkBtn { background: #3291ff; color: #ffffff; box-shadow: 0 4px 12px rgba(50, 145, 255, 0.25); } #getRandomLinkBtn:hover { box-shadow: 0 6px 16px rgba(50, 145, 255, 0.4); } body.white-theme #getRandomLinkBtn { background: #0070f3; color: #ffffff; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.25); } body.white-theme #getRandomLinkBtn:hover { box-shadow: 0 6px 16px rgba(0, 112, 243, 0.4); } .results { display: flex; flex-direction: column; gap: 16px; } .result-item { display: flex; align-items: center; padding: 18px 24px; border-radius: 12px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0, 112, 243, 0.4); box-shadow: 0 8px 24px rgba(0,0,0,0.6); opacity: 1; transform: translateY(0); position: relative; overflow: hidden; } .result-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3291ff; box-shadow: 0 0 12px #3291ff; } body.white-theme .result-item { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(0, 112, 243, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.06); } .result-item.fade-out { animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; } .icon-box { margin-right: 18px; color: #3291ff; } .info-group { flex: 1; display: flex; flex-direction: column; gap: 6px; } .url { font-size: 14px; color: #eaeaea; font-family: ui-monospace, Consolas, monospace; font-weight: 500; word-break: break-all; text-decoration: none; line-height: 1.5; } body.white-theme .url { color: #111; } .auto-copy-tag { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3291ff; font-weight: 600; } .auto-copy-tag svg { width: 14px; height: 14px; } .result-item.fail { border-color: rgba(255, 50, 50, 0.4); } .result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; } .result-item.fail .icon-box { color: #ff3333; } .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; } .import-card, .download-card { background: transparent; border: none; box-shadow: none; margin-top: 16px; } .import-card { display: none; animation: fadeIn 0.4s ease; } .download-card { display: block; animation: fadeIn 0.6s ease; margin-top: 30px; } body.white-theme .import-card, body.white-theme .download-card { background: transparent; border: none; box-shadow: none; } .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; } body.white-theme .import-header { color: #111111; } .app-list { display: flex; flex-direction: column; gap: 12px; } .app-btn { width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none; -webkit-tap-highlight-color: transparent; } body.white-theme .app-btn { background: rgba(255, 255, 255, 0.4); border-color: rgba(0, 0, 0, 0.1); color: #111111; } .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); } body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); } .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; } .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; } .os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; } .os-tabs::-webkit-scrollbar { display: none; } .os-tab { padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #eaeaea; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: all 0.3s; outline: none; -webkit-tap-highlight-color: transparent; } .os-tab.active { background: #3291ff; color: #fff; border-color: #3291ff; } body.white-theme .os-tab { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); color: #111; } body.white-theme .os-tab.active { background: #0070f3; color: #fff; border-color: #0070f3; } .dl-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; } .dl-chevron { width: 18px; height: 18px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; } .dl-links { display: none; flex-direction: column; gap: 8px; padding: 4px 8px 8px 46px; } .dl-links.open { display: flex; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } } .dl-link { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #3291ff; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s; } .dl-link:hover { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.3); transform: translateX(2px); } body.white-theme .dl-link { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.08); color: #0070f3; } body.white-theme .dl-link:hover { background: rgba(0,112,243,0.08); border-color: rgba(0,112,243,0.3); } .dl-link-icon { width: 16px; height: 16px; } @media (max-width: 600px) { .container { padding: 0 8px; } textarea { min-height: 260px; } .app-btn { padding: 12px 16px; } .app-icon { width: 22px; height: 22px; } .app-name { font-size: 14px; margin-left: 14px; } }`;
-    const appHTML = `<canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas><div class="container"><div class="header"><div class="logo-area"><svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 2,22 22,22" /></svg><span class="logo-text">Vercel</span></div><div class="theme-toggle" id="themeToggle"><svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></div></div><textarea id="urlInput" placeholder=""></textarea><div class="settings-card"><span class="setting-label">优选订阅器</span><div class="custom-select-wrapper" id="customSelectWrapper"><div class="custom-select-trigger" id="customSelectTrigger"><span>sub.eooce.xx.kg</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="custom-options"><div class="custom-option selected" data-value="sub.eooce.xx.kg">sub.eooce.xx.kg</div><div class="custom-option" data-value="owo.o00o.ooo">owo.o00o.ooo</div><div class="custom-option" data-value="zrf.zrf.me">zrf.zrf.me</div><div class="custom-option" data-value="sub.keaeye.icu">sub.keaeye.icu</div><div class="custom-option" data-value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</div><div class="custom-option" data-value="sub.bbc.xx.kg">sub.bbc.xx.kg</div></div></div><input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg"></div><div class="actions"><button class="btn" id="subConverterBtn">订阅转换器</button><button class="btn" id="getRandomLinkBtn">获取订阅链接</button><button class="btn" id="fetchBtn">生成订阅</button></div><div class="results" id="resultsContainer"></div><div class="import-card" id="importCard"><div class="import-header">一键导入订阅至 App</div><div class="app-list"><button class="app-btn" data-scheme="shadowrocket://add/"><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket"><span class="app-name">导入到 Shadowrocket</span></button><button class="app-btn" data-scheme="v2rayng://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/v2rayNG.svg" alt="v2rayNG"><span class="app-name">导入到 v2rayNG</span></button><button class="app-btn" data-scheme="clash://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashMetaforAndroid.svg" alt="Clash Meta"><span class="app-name">导入到 Clash Meta</span></button><button class="app-btn" data-scheme="flclash://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Flclash.svg" alt="FlClash"><span class="app-name">导入到 FlClash</span></button><button class="app-btn" data-scheme="surfboard:///install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Surfboard.svg" alt="Surfboard"><span class="app-name">导入到 Surfboard</span></button><button class="app-btn" data-scheme="sing-box://import-remote-profile?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/singbox.svg" alt="Sing-box"><span class="app-name">导入到 Sing-box</span></button><button class="app-btn" data-scheme="hiddify://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify"><span class="app-name">导入到 Hiddify</span></button><button class="app-btn" data-scheme="nekobox://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox"><span class="app-name">导入到 NekoBox</span></button><button class="app-btn" data-scheme="karing://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing"><span class="app-name">导入到 Karing</span></button></div></div><div class="download-card" id="downloadCard"><div class="import-header">客户端下载</div><div class="os-tabs" id="osTabs"><button class="os-tab active" data-os="android" title="Android"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.52 15.34c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m-11.04 0c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m11.4-6.02l1.99-3.45a.41.41 0 00-.56-.15l-2.02 3.5A13.06 13.06 0 0012 7.8c-1.85 0-3.59.45-5.13 1.15l-2.02-3.5a.41.41 0 00-.56.15.41.41 0 00.15.56l1.99 3.45C2.68 11.18.34 14.65 0 18.76h24c-.34-4.11-2.68-7.58-6.11-9.44z"/></svg></button><button class="os-tab" data-os="windows" title="Windows"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M0 3.45L9.75 2.1v9.45H0m10.95-9.6l13.05-1.8v11.4H10.95M0 12.6h9.75v9.45L0 20.7M10.95 12.6H24V24l-12.95-1.8"/></svg></button><button class="os-tab" data-os="mac" title="macOS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button><button class="os-tab" data-os="ios" title="iOS"><span style="font-weight: bold; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">iOS</span></button><button class="os-tab" data-os="linux" title="Linux"><img src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Linux.svg" width="20" height="20" style="object-fit: contain;"></button></div><div class="app-grid" id="dlGrid"></div></div></div>`;
+    const appCSS = '* { margin: 0; padding: 0; box-sizing: border-box; } ' +
+    'body { --mouse-x: 50vw; --mouse-y: 50vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 8vh 20px 40px 20px; transition: background 0.4s ease, color 0.4s ease; background: #000000; color: #eaeaea; overflow-x: hidden; } ' +
+    '@keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } } ' +
+    'body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; transition: background-image 0.4s ease; animation: gridMove 15s linear infinite; } ' +
+    'body::after { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(50, 145, 255, 0.08), transparent 80%); pointer-events: none; z-index: 0; transition: background 0.4s ease; } ' +
+    'body.white-theme::before { background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px); } ' +
+    'body.white-theme::after { background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(0, 112, 243, 0.05), transparent 80%); } ' +
+    'body.white-theme { background: #ffffff; color: #111111; } ' +
+    '.container { position: relative; z-index: 2; width: 100%; max-width: 800px; } ' +
+    '.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); } ' +
+    'body.white-theme .header { border-bottom-color: rgba(0,0,0,0.1); } ' +
+    '.logo-area { display: flex; align-items: center; gap: 16px; } ' +
+    '.logo-svg { width: 42px; height: 42px; fill: currentColor; } ' +
+    '.logo-text { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; } ' +
+    '.theme-toggle { cursor: pointer; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; -webkit-tap-highlight-color: transparent; } ' +
+    '.theme-toggle svg { width: 32px; height: 32px; fill: currentColor; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s; } ' +
+    '.moon-icon { display: block; } .sun-icon { display: none; } ' +
+    'body.white-theme .moon-icon { display: none; } body.white-theme .sun-icon { display: block; } ' +
+    '.theme-toggle:hover svg { transform: scale(1.1); } ' +
+    '@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } } ' +
+    'textarea { width: 100%; padding: 22px 24px; font-size: 15px; font-family: ui-monospace, Consolas, monospace; border-radius: 16px; resize: vertical; min-height: 320px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3); border-left: 1px solid rgba(255, 255, 255, 0.25); color: #eaeaea; outline: none; transition: all 0.3s; box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6); } ' +
+    'textarea::placeholder { color: rgba(255, 255, 255, 0.4); line-height: 1.8; } ' +
+    'textarea:focus { border-color: #3291ff; background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.1), 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.8); } ' +
+    'body.white-theme textarea { background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%); border: 1px solid rgba(255, 255, 255, 0.6); border-top: 1px solid rgba(255, 255, 255, 0.8); border-left: 1px solid rgba(255, 255, 255, 0.5); color: #111111; box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05); } ' +
+    'body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); } ' +
+    'body.white-theme textarea:focus { border-color: #0070f3; background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15); } ' +
+    '.settings-card { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 14px 18px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center; gap: 16px; position: relative; z-index: 99; } ' +
+    'body.white-theme .settings-card { background: rgba(255, 255, 255, 0.65); border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0,0,0,0.05); } ' +
+    '.setting-label { font-size: 14px; font-weight: 500; color: #eaeaea; white-space: nowrap; flex-shrink: 0; } ' +
+    'body.white-theme .setting-label { color: #111111; } ' +
+    '.custom-select-wrapper { flex: 1; max-width: 55%; position: relative; } ' +
+    '.custom-select-trigger { background: #111111; color: #eaeaea; border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 12px; border-radius: 8px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; user-select: none; } ' +
+    'body.white-theme .custom-select-trigger { background: rgba(255, 255, 255, 0.8); color: #111111; border-color: rgba(0, 0, 0, 0.15); } ' +
+    '.custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger { border-color: #3291ff; } ' +
+    'body.white-theme .custom-select-trigger:hover, body.white-theme .custom-select-wrapper.open .custom-select-trigger { border-color: #0070f3; } ' +
+    '.custom-select-trigger svg { transition: transform 0.3s ease; opacity: 0.7; } ' +
+    '.custom-select-wrapper.open .custom-select-trigger svg { transform: rotate(180deg); } ' +
+    '.custom-options { position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; } ' +
+    '.custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0); } ' +
+    'body.white-theme .custom-options { background: rgba(255, 255, 255, 0.85); border-color: rgba(0, 0, 0, 0.1); box-shadow: 0 12px 32px rgba(0,0,0,0.1); } ' +
+    '.custom-option { padding: 12px 16px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; cursor: pointer; color: rgba(255, 255, 255, 0.8); transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; } ' +
+    'body.white-theme .custom-option { color: #333; } ' +
+    '.custom-option:hover, .custom-option.selected { background: rgba(50, 145, 255, 0.15); color: #3291ff; } ' +
+    'body.white-theme .custom-option:hover, body.white-theme .custom-option.selected { background: rgba(0, 112, 243, 0.08); color: #0070f3; } ' +
+    '.custom-option::after { content: ""; width: 8px; height: 14px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) scale(0); transition: transform 0.2s; opacity: 0; margin-bottom: 4px; } ' +
+    '.custom-option.selected::after { transform: rotate(45deg) scale(1); opacity: 1; } ' +
+    '.actions { display: flex; justify-content: flex-end; margin-bottom: 30px; gap: 16px; flex-wrap: wrap; } ' +
+    '.btn { background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 40px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15); -webkit-tap-highlight-color: transparent; outline: none; flex: 1; min-width: 120px; text-align: center; } ' +
+    '.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25); } ' +
+    '.btn:disabled { opacity: 0.5; pointer-events: none; } ' +
+    'body.white-theme .btn { background: #000000; color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); } ' +
+    'body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); } ' +
+    '#getRandomLinkBtn { background: #3291ff; color: #ffffff; box-shadow: 0 4px 12px rgba(50, 145, 255, 0.25); } ' +
+    '#getRandomLinkBtn:hover { box-shadow: 0 6px 16px rgba(50, 145, 255, 0.4); } ' +
+    'body.white-theme #getRandomLinkBtn { background: #0070f3; color: #ffffff; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.25); } ' +
+    'body.white-theme #getRandomLinkBtn:hover { box-shadow: 0 6px 16px rgba(0, 112, 243, 0.4); } ' +
+    '.results { display: flex; flex-direction: column; gap: 16px; } ' +
+    '.result-item { display: flex; align-items: center; padding: 18px 24px; border-radius: 12px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0, 112, 243, 0.4); box-shadow: 0 8px 24px rgba(0,0,0,0.6); opacity: 1; transform: translateY(0); position: relative; overflow: hidden; } ' +
+    '.result-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3291ff; box-shadow: 0 0 12px #3291ff; } ' +
+    'body.white-theme .result-item { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(0, 112, 243, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.06); } ' +
+    '.result-item.fade-out { animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; } ' +
+    '.icon-box { margin-right: 18px; color: #3291ff; } ' +
+    '.info-group { flex: 1; display: flex; flex-direction: column; gap: 6px; } ' +
+    '.url { font-size: 14px; color: #eaeaea; font-family: ui-monospace, Consolas, monospace; font-weight: 500; word-break: break-all; text-decoration: none; line-height: 1.5; } ' +
+    'body.white-theme .url { color: #111; } ' +
+    '.auto-copy-tag { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3291ff; font-weight: 600; } ' +
+    '.auto-copy-tag svg { width: 14px; height: 14px; } ' +
+    '.result-item.fail { border-color: rgba(255, 50, 50, 0.4); } ' +
+    '.result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; } ' +
+    '.result-item.fail .icon-box { color: #ff3333; } ' +
+    '.result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; } ' +
+    '.import-card, .download-card { background: transparent; border: none; box-shadow: none; margin-top: 16px; } ' +
+    '.import-card { display: none; animation: fadeIn 0.4s ease; } ' +
+    '.download-card { display: block; animation: fadeIn 0.6s ease; margin-top: 30px; } ' +
+    'body.white-theme .import-card, body.white-theme .download-card { background: transparent; border: none; box-shadow: none; } ' +
+    '.import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; } ' +
+    'body.white-theme .import-header { color: #111111; } ' +
+    '.app-list { display: flex; flex-direction: column; gap: 12px; } ' +
+    '.app-btn { width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none; -webkit-tap-highlight-color: transparent; } ' +
+    'body.white-theme .app-btn { background: rgba(255, 255, 255, 0.4); border-color: rgba(0, 0, 0, 0.1); color: #111111; } ' +
+    '.app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); } ' +
+    'body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); } ' +
+    '.app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; } ' +
+    '.app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; } ' +
+    '.os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; } ' +
+    '.os-tabs::-webkit-scrollbar { display: none; } ' +
+    '.os-tab { padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #eaeaea; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: all 0.3s; outline: none; -webkit-tap-highlight-color: transparent; } ' +
+    '.os-tab.active { background: #3291ff; color: #fff; border-color: #3291ff; } ' +
+    'body.white-theme .os-tab { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); color: #111; } ' +
+    'body.white-theme .os-tab.active { background: #0070f3; color: #fff; border-color: #0070f3; } ' +
+    '.dl-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; } ' +
+    '.dl-chevron { width: 18px; height: 18px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; } ' +
+    '.dl-links { display: none; flex-direction: column; gap: 8px; padding: 4px 8px 8px 46px; } ' +
+    '.dl-links.open { display: flex; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } ' +
+    '@keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } } ' +
+    '.dl-link { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #3291ff; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s; } ' +
+    '.dl-link:hover { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.3); transform: translateX(2px); } ' +
+    'body.white-theme .dl-link { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.08); color: #0070f3; } ' +
+    'body.white-theme .dl-link:hover { background: rgba(0,112,243,0.08); border-color: rgba(0,112,243,0.3); } ' +
+    '.dl-link-icon { width: 16px; height: 16px; } ' +
+    '@media (max-width: 600px) { .container { padding: 0 8px; } textarea { min-height: 260px; } .app-btn { padding: 12px 16px; } .app-icon { width: 22px; height: 22px; } .app-name { font-size: 14px; margin-left: 14px; } }';
+
+    const appHTML = '<canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>' +
+    '<div class="container">' +
+    '<div class="header">' +
+    '<div class="logo-area">' +
+    '<svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 2,22 22,22" /></svg>' +
+    '<span class="logo-text">Vercel</span>' +
+    '</div>' +
+    '<div class="theme-toggle" id="themeToggle">' +
+    '<svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>' +
+    '<svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>' +
+    '</div>' +
+    '</div>' +
+    '<textarea id="urlInput" placeholder=""></textarea>' +
+    '<div class="settings-card">' +
+    '<span class="setting-label">优选订阅器</span>' +
+    '<div class="custom-select-wrapper" id="customSelectWrapper">' +
+    '<div class="custom-select-trigger" id="customSelectTrigger">' +
+    '<span>sub.eooce.xx.kg</span>' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+    '</div>' +
+    '<div class="custom-options">' +
+    '<div class="custom-option selected" data-value="sub.eooce.xx.kg">sub.eooce.xx.kg</div>' +
+    '<div class="custom-option" data-value="owo.o00o.ooo">owo.o00o.ooo</div>' +
+    '<div class="custom-option" data-value="zrf.zrf.me">zrf.zrf.me</div>' +
+    '<div class="custom-option" data-value="sub.keaeye.icu">sub.keaeye.icu</div>' +
+    '<div class="custom-option" data-value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</div>' +
+    '<div class="custom-option" data-value="sub.bbc.xx.kg">sub.bbc.xx.kg</div>' +
+    '</div>' +
+    '</div>' +
+    '<input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg">' +
+    '</div>' +
+    '<div class="actions">' +
+    '<button class="btn" id="subConverterBtn">订阅转换器</button>' +
+    '<button class="btn" id="getRandomLinkBtn">获取订阅链接</button>' +
+    '<button class="btn" id="fetchBtn">生成订阅</button>' +
+    '</div>' +
+    '<div class="results" id="resultsContainer"></div>' +
+    '<div class="download-card" id="downloadCard">' +
+    '<div class="import-header">客户端下载</div>' +
+    '<div class="os-tabs" id="osTabs">' +
+    '<button class="os-tab active" data-os="android" title="Android"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.52 15.34c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m-11.04 0c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m11.4-6.02l1.99-3.45a.41.41 0 00-.56-.15l-2.02 3.5A13.06 13.06 0 0012 7.8c-1.85 0-3.59.45-5.13 1.15l-2.02-3.5a.41.41 0 00-.56.15.41.41 0 00.15.56l1.99 3.45C2.68 11.18.34 14.65 0 18.76h24c-.34-4.11-2.68-7.58-6.11-9.44z"/></svg></button>' +
+    '<button class="os-tab" data-os="windows" title="Windows"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M0 3.45L9.75 2.1v9.45H0m10.95-9.6l13.05-1.8v11.4H10.95M0 12.6h9.75v9.45L0 20.7M10.95 12.6H24V24l-12.95-1.8"/></svg></button>' +
+    '<button class="os-tab" data-os="mac" title="macOS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button>' +
+    '<button class="os-tab" data-os="ios" title="iOS"><span style="font-weight: bold; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif;">iOS</span></button>' +
+    '<button class="os-tab" data-os="linux" title="Linux"><img src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Linux.svg" width="20" height="20" style="object-fit: contain;"></button>' +
+    '</div>' +
+    '<div class="app-grid" id="dlGrid"></div>' +
+    '</div>' +
+    '</div>';
 
     const styleEl = document.createElement('style');
     styleEl.innerHTML = appCSS;
@@ -118,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function unescapeUnicode(str) { return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16))); }
     function resolveReverseStrings(code) { return code.replace(/(['"])([^'"]*?)\1\.split\(['"]{2}\)\.reverse\(\)\.join\(['"]{2}\)/g, (match, quote, content) => { return '"' + content.split('').reverse().join('') + '"'; }); }
     function extractDefaultValue(code, varName) {
-        const plainRegex = new RegExp('(?:const|let|var)\\s+' + varName + '\\s*=\\s*(?:process\\.env\\.[A-Za-z0-9_]+\\s*\\|\\|\\s*)?([\'"`])(.*?)\\1', 'i');
+        const plainRegex = new RegExp('(?:const|let|var)\\s+' + varName + '\\s*=\\s*(?:process\\.env\\.[A-Za-z0-9_]+\\s*\\|\\|\\s*)?([\'"\\x60])(.*?)\\1', 'i');
         const plainMatch = code.match(plainRegex); if (plainMatch) return plainMatch[2];
         const regex = new RegExp('(?:const|let|var)\\s+' + varName + '\\s*=\\s*([^;]+);', 'i');
         const match = code.match(regex); if (!match) return null;
@@ -155,11 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const resultsContainer = document.getElementById('resultsContainer');
-    const importCard = document.getElementById('importCard');
     let clearTimer = null;
 
     function renderAndAnimate(results) {
-        resultsContainer.innerHTML = ''; importCard.style.display = 'none'; currentFinalSubUrl = ''; clearTimeout(clearTimer);
+        resultsContainer.innerHTML = ''; currentFinalSubUrl = ''; clearTimeout(clearTimer);
         let html = ''; let successfulUrls = [];
         for (const item of results) {
             if (item.success) {
@@ -170,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         resultsContainer.innerHTML = html;
-        if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\\n')); importCard.style.display = 'block'; }
+        if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\n')); }
         clearTimer = setTimeout(() => {
             const items = document.querySelectorAll('.result-item'); items.forEach(el => el.classList.add('fade-out'));
             setTimeout(() => { resultsContainer.innerHTML = ''; }, 600);
@@ -211,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fetchBtn = document.getElementById('fetchBtn');
     fetchBtn.addEventListener('click', () => {
         const raw = urlInput.value.trim(); if (!raw) return;
-        const urls = raw.split(/[,、\\s\\n]+/).filter(s => s.trim() !== '');
+        const urls = raw.split(/[\r\n]+/).filter(s => s.trim() !== '');
         executeRemoteFetch(urls);
     });
 
@@ -225,27 +373,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.open('https://sub.cmliussss.com/', '_blank');
     });
 
-    document.querySelectorAll('.app-btn').forEach(btn => {
-        btn.addEventListener('click', function() { 
-            if (!currentFinalSubUrl || !this.dataset.scheme) return; 
-            
-            const scheme = this.dataset.scheme;
-            let targetType = 'auto';
-
-            if (scheme.includes('clash') || scheme.includes('flclash')) {
-                targetType = 'clash';
-            } else if (scheme.includes('surfboard')) {
-                targetType = 'surfboard';
-            } else if (scheme.includes('sing-box')) {
-                targetType = 'singbox';
-            }
-            
-            const convertedUrl = 'https://url.v1.mk/sub?target=' + targetType + '&url=' + encodeURIComponent(currentFinalSubUrl) + '&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false';
-            
-            window.location.href = scheme + encodeURIComponent(convertedUrl); 
-        });
-    });
-
     const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');
     getRandomLinkBtn.addEventListener('click', async () => {
         try {
@@ -255,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!res.ok) throw new Error();
             let text = await res.text();
             try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
-            const urls = text.split(/[\\r\\n]+/).filter(line => line.trim().startsWith('http'));
+            const urls = text.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
             if (urls.length === 0) throw new Error();
             executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
         } catch (err) {
@@ -274,7 +401,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const hiddifyIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">';
     const nekoIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">';
     const karingIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">';
-    const shadowrocketIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">';
 
     const dlData = {
         android: [
@@ -302,11 +428,9 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
             { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'macOS DMG', repo: 'hiddify/hiddify-next', match: 'MacOS.dmg' } ] },
             { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
-            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] },
-            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'Mac App Store', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] }
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] }
         ],
         ios: [
-            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] },
             { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/sing-box/id6451299863' } ] },
             { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777032' } ] },
             { name: 'Karing', icon: karingIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/karing/id6471343750' } ] }
@@ -395,4 +519,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     renderOS('android');
+
 });

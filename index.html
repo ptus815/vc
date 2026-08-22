@@ -311,6 +311,7 @@
             font-family: ui-monospace, monospace;
         }
 
+        /* ----- 自定义高级 Select 样式开始 ----- */
         .settings-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(12px);
@@ -325,6 +326,9 @@
             justify-content: space-between;
             align-items: center;
             gap: 16px;
+            /* 👇 新增层叠上下文属性，修复下拉菜单被遮挡问题 */
+            position: relative;
+            z-index: 99;
         }
 
         body.white-theme .settings-card {
@@ -342,9 +346,13 @@
         }
         body.white-theme .setting-label { color: #111111; }
 
-        .setting-select {
+        .custom-select-wrapper {
             flex: 1;
             max-width: 55%;
+            position: relative;
+        }
+
+        .custom-select-trigger {
             background: #111111;
             color: #eaeaea;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -352,24 +360,117 @@
             border-radius: 8px;
             font-family: ui-monospace, Consolas, monospace;
             font-size: 13px;
-            outline: none;
             cursor: pointer;
-            transition: border-color 0.3s;
-            text-overflow: ellipsis;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            user-select: none;
         }
-        body.white-theme .setting-select {
+        
+        body.white-theme .custom-select-trigger {
             background: rgba(255, 255, 255, 0.8);
             color: #111111;
             border-color: rgba(0, 0, 0, 0.15);
         }
-        .setting-select:focus { border-color: #3291ff; }
+
+        .custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger {
+            border-color: #3291ff;
+        }
+        
+        body.white-theme .custom-select-trigger:hover, body.white-theme .custom-select-wrapper.open .custom-select-trigger {
+            border-color: #0070f3;
+        }
+
+        .custom-select-trigger svg {
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger svg {
+            transform: rotate(180deg);
+        }
+
+        /* 浮动下拉菜单：毛玻璃质感、悬浮动画 */
+        .custom-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        body.white-theme .custom-options {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .custom-option {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-family: ui-monospace, Consolas, monospace;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.white-theme .custom-option { color: #333; }
+
+        .custom-option:hover, .custom-option.selected {
+            background: rgba(50, 145, 255, 0.15);
+            color: #3291ff;
+        }
+
+        body.white-theme .custom-option:hover, body.white-theme .custom-option.selected {
+            background: rgba(0, 112, 243, 0.08);
+            color: #0070f3;
+        }
+
+        /* 选中项旁边的漂亮小对号 */
+        .custom-option::after {
+            content: '';
+            width: 8px;
+            height: 14px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg) scale(0);
+            transition: transform 0.2s;
+            opacity: 0;
+            margin-bottom: 4px;
+        }
+        .custom-option.selected::after {
+            transform: rotate(45deg) scale(1);
+            opacity: 1;
+        }
+        /* ----- 自定义高级 Select 样式结束 ----- */
 
         .actions {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 30px;
             gap: 16px; 
-            flex-wrap: wrap; /* 适配移动端多按钮 */
+            flex-wrap: wrap; 
         }
 
         .btn {
@@ -385,7 +486,7 @@
             box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
             -webkit-tap-highlight-color: transparent;
             outline: none;
-            flex: 1; /* 适配移动端宽度 */
+            flex: 1; 
             min-width: 120px;
             text-align: center;
         }
@@ -480,23 +581,28 @@
         .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; }
 
+        /* 完美修复死黑背景问题：赋予卡片高级的光泽磨砂材质 */
         .import-card, .download-card {
-            background: rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3); /* 顶部高光折射边缘 */
+            border-left: 1px solid rgba(255, 255, 255, 0.25); /* 左侧高光折射边缘 */
             border-radius: 16px;
             padding: 24px;
             margin-top: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6);
         }
         .import-card { display: none; animation: fadeIn 0.4s ease; }
         .download-card { display: block; animation: fadeIn 0.6s ease; margin-top: 30px; }
 
         body.white-theme .import-card, body.white-theme .download-card {
-            background: rgba(255, 255, 255, 0.65);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05);
         }
 
         .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; }
@@ -591,16 +697,25 @@
         </div>
     </div>
 
+    <!-- 替换了原生的 select，使用完全定制的高级手写下拉组件 -->
     <div class="settings-card">
         <span class="setting-label">优选订阅器</span>
-        <select class="setting-select" id="subDomainSelect">
-            <option value="sub.eooce.xx.kg" selected>sub.eooce.xx.kg</option>
-            <option value="owo.o00o.ooo">owo.o00o.ooo</option>
-            <option value="zrf.zrf.me">zrf.zrf.me</option>
-            <option value="sub.keaeye.icu">sub.keaeye.icu</option>
-            <option value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</option>
-            <option value="sub.bbc.xx.kg">sub.bbc.xx.kg</option>
-        </select>
+        <div class="custom-select-wrapper" id="customSelectWrapper">
+            <div class="custom-select-trigger" id="customSelectTrigger">
+                <span>sub.eooce.xx.kg</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="custom-options">
+                <div class="custom-option selected" data-value="sub.eooce.xx.kg">sub.eooce.xx.kg</div>
+                <div class="custom-option" data-value="owo.o00o.ooo">owo.o00o.ooo</div>
+                <div class="custom-option" data-value="zrf.zrf.me">zrf.zrf.me</div>
+                <div class="custom-option" data-value="sub.keaeye.icu">sub.keaeye.icu</div>
+                <div class="custom-option" data-value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</div>
+                <div class="custom-option" data-value="sub.bbc.xx.kg">sub.bbc.xx.kg</div>
+            </div>
+        </div>
+        <!-- 隐藏的 input，保证底层 JS 获取数据的逻辑一丁点都不用改 -->
+        <input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg">
     </div>
 
     <div class="actions">
@@ -730,6 +845,38 @@
         requestAnimationFrame(animateParticles);
     }
     resizeCanvas(); animateParticles();
+
+    // ----- 新增：自定义下拉框控制 JS -----
+    const customSelectWrapper = document.getElementById('customSelectWrapper');
+    const customSelectTrigger = document.getElementById('customSelectTrigger');
+    const customSelectTriggerText = customSelectTrigger.querySelector('span');
+    const customOptions = document.querySelectorAll('.custom-option');
+    const hiddenSubDomain = document.getElementById('subDomainSelect');
+
+    customSelectTrigger.addEventListener('click', (e) => {
+        customSelectWrapper.classList.toggle('open');
+        e.stopPropagation(); // 阻止事件冒泡，以免立刻触发document的点击事件
+    });
+
+    customOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const value = option.dataset.value;
+            customSelectTriggerText.textContent = value;
+            hiddenSubDomain.value = value; // 更新隐藏的 input 值供后面核心代码读取
+            
+            // 处理选中高亮状态
+            customOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            customSelectWrapper.classList.remove('open');
+        });
+    });
+
+    // 点击页面空白处收起下拉菜单
+    document.addEventListener('click', () => {
+        customSelectWrapper.classList.remove('open');
+    });
+    // ----------------------------------
 
     const urlInput = document.getElementById('urlInput');
     const promptText = "点击获取订阅链接，\n或直接粘贴 vless://、trojan://、vmess:// 等链接点击生成订阅...\n支持批量，每行一个";

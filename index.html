@@ -1,11 +1,1016 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚀Edge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀Edge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            --mouse-x: 50vw;
+            --mouse-y: 50vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 8vh 20px 40px 20px;
+            transition: background 0.4s ease, color 0.4s ease;
+            background: #000000;
+            color: #eaeaea;
+            overflow-x: hidden;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            transition: background-image 0.4s ease;
+            animation: gridMove 15s linear infinite; 
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
+            background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(50, 145, 255, 0.08), transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.4s ease;
+        }
+
+        body.white-theme::before {
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        }
+
+        body.white-theme::after {
+            background: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y), rgba(0, 112, 243, 0.05), transparent 80%);
+        }
+
+        body.white-theme {
+            background: #ffffff;
+            color: #111111;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        body.white-theme .header {
+            border-bottom-color: rgba(0,0,0,0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-svg {
+            width: 42px;
+            height: 42px;
+            fill: currentColor;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .theme-toggle svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+        }
+
+        .moon-icon { display: block; }
+        .sun-icon { display: none; }
+        body.white-theme .moon-icon { display: none; }
+        body.white-theme .sun-icon { display: block; }
+
+        .theme-toggle:hover svg { transform: scale(1.1); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        textarea {
+            width: 100%;
+            padding: 22px 24px;
+            font-size: 15px;
+            font-family: ui-monospace, Consolas, monospace;
+            border-radius: 16px;
+            resize: vertical;
+            min-height: 320px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.25);
+            color: #eaeaea;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.8;
+        }
+
+        textarea:focus {
+            border-color: #3291ff;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
+            box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.1), 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.8);
+        }
+
+        body.white-theme textarea {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            color: #111111;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+        body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); }
+        body.white-theme textarea:focus {
+            border-color: #0070f3;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+            box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15);
+        }
+
+        .settings-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 99;
+        }
+
+        body.white-theme .settings-card {
+            background: rgba(255, 255, 255, 0.65);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #eaeaea;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        body.white-theme .setting-label { color: #111111; }
+
+        .custom-select-wrapper {
+            flex: 1;
+            max-width: 55%;
+            position: relative;
+        }
+
+        .custom-select-trigger {
+            background: #111111;
+            color: #eaeaea;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        body.white-theme .custom-select-trigger {
+            background: rgba(255, 255, 255, 0.8);
+            color: #111111;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger {
+            border-color: #3291ff;
+        }
+        
+        body.white-theme .custom-select-trigger:hover, body.white-theme .custom-select-wrapper.open .custom-select-trigger {
+            border-color: #0070f3;
+        }
+
+        .custom-select-trigger svg {
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger svg {
+            transform: rotate(180deg);
+        }
+
+        .custom-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        body.white-theme .custom-options {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .custom-option {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-family: ui-monospace, Consolas, monospace;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.white-theme .custom-option { color: #333; }
+
+        .custom-option:hover, .custom-option.selected {
+            background: rgba(50, 145, 255, 0.15);
+            color: #3291ff;
+        }
+
+        body.white-theme .custom-option:hover, body.white-theme .custom-option.selected {
+            background: rgba(0, 112, 243, 0.08);
+            color: #0070f3;
+        }
+
+        .custom-option::after {
+            content: '';
+            width: 8px;
+            height: 14px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg) scale(0);
+            transition: transform 0.2s;
+            opacity: 0;
+            margin-bottom: 4px;
+        }
+        .custom-option.selected::after {
+            transform: rotate(45deg) scale(1);
+            opacity: 1;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+            gap: 16px; 
+            flex-wrap: wrap; 
+        }
+
+        .btn {
+            background: #ffffff;
+            color: #000000;
+            padding: 12px 28px; 
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            flex: 1; 
+            min-width: 120px;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        body.white-theme .btn {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
+
+        #getRandomLinkBtn {
+            background: #3291ff;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(50, 145, 255, 0.25);
+        }
+        #getRandomLinkBtn:hover {
+            box-shadow: 0 6px 16px rgba(50, 145, 255, 0.4);
+        }
+        body.white-theme #getRandomLinkBtn {
+            background: #0070f3;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 112, 243, 0.25);
+        }
+        body.white-theme #getRandomLinkBtn:hover {
+            box-shadow: 0 6px 16px rgba(0, 112, 243, 0.4);
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 112, 243, 0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3291ff;
+            box-shadow: 0 0 12px #3291ff;
+        }
+        body.white-theme .result-item {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(0, 112, 243, 0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+
+        .result-item.fade-out {
+            animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .icon-box { margin-right: 18px; color: #3291ff; }
+        .info-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .url { font-size: 14px; color: #eaeaea; font-family: ui-monospace, Consolas, monospace; font-weight: 500; word-break: break-all; text-decoration: none; line-height: 1.5; }
+        body.white-theme .url { color: #111; }
+
+        .auto-copy-tag { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3291ff; font-weight: 600; }
+        .auto-copy-tag svg { width: 14px; height: 14px; }
+
+        .result-item.fail { border-color: rgba(255, 50, 50, 0.4); }
+        .result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; }
+        .result-item.fail .icon-box { color: #ff3333; }
+        .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; }
+
+        .import-card, .download-card {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            margin-top: 16px;
+        }
+        .import-card { display: none; animation: fadeIn 0.4s ease; }
+        .download-card { display: block; animation: fadeIn 0.6s ease; margin-top: 30px; }
+
+        body.white-theme .import-card, body.white-theme .download-card {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; }
+        body.white-theme .import-header { color: #111111; }
+        .app-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .app-btn {
+            width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none; -webkit-tap-highlight-color: transparent;
+        }
+        body.white-theme .app-btn { background: rgba(255, 255, 255, 0.4); border-color: rgba(0, 0, 0, 0.1); color: #111111; }
+        .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); }
+        body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); }
+        
+        .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
+        .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
+
+        .os-tabs {
+            display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+        }
+        .os-tabs::-webkit-scrollbar { display: none; }
+        .os-tab {
+            padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #eaeaea; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: all 0.3s; outline: none; -webkit-tap-highlight-color: transparent;
+        }
+        .os-tab.active { background: #3291ff; color: #fff; border-color: #3291ff; }
+        body.white-theme .os-tab { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); color: #111; }
+        body.white-theme .os-tab.active { background: #0070f3; color: #fff; border-color: #0070f3; }
+
+        .dl-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .dl-chevron { width: 18px; height: 18px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
+        .dl-links { display: none; flex-direction: column; gap: 8px; padding: 4px 8px 8px 46px; }
+        .dl-links.open { display: flex; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dl-link {
+            display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #3291ff; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s;
+        }
+        .dl-link:hover { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.3); transform: translateX(2px); }
+        body.white-theme .dl-link { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.08); color: #0070f3; }
+        body.white-theme .dl-link:hover { background: rgba(0,112,243,0.08); border-color: rgba(0,112,243,0.3); }
+        .dl-link-icon { width: 16px; height: 16px; }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 8px; }
+            textarea { min-height: 260px; }
+            .app-btn { padding: 12px 16px; }
+            .app-icon { width: 22px; height: 22px; }
+            .app-name { font-size: 14px; margin-left: 14px; }
+        }
+    </style>
 </head>
 <body class="white-theme">
-<script src="app.js"></script>
+
+<canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-area">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 2,22 22,22" /></svg>
+            <span class="logo-text">Vercel</span>
+        </div>
+        <div class="theme-toggle" id="themeToggle">
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </div>
+    </div>
+
+    <textarea id="urlInput" placeholder=""></textarea>
+
+    <div class="settings-card">
+        <span class="setting-label">优选订阅器</span>
+        <div class="custom-select-wrapper" id="customSelectWrapper">
+            <div class="custom-select-trigger" id="customSelectTrigger">
+                <span>sub.eooce.xx.kg</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="custom-options">
+                <div class="custom-option selected" data-value="sub.eooce.xx.kg">sub.eooce.xx.kg</div>
+                <div class="custom-option" data-value="owo.o00o.ooo">owo.o00o.ooo</div>
+                <div class="custom-option" data-value="zrf.zrf.me">zrf.zrf.me</div>
+                <div class="custom-option" data-value="sub.keaeye.icu">sub.keaeye.icu</div>
+                <div class="custom-option" data-value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</div>
+                <div class="custom-option" data-value="sub.bbc.xx.kg">sub.bbc.xx.kg</div>
+            </div>
+        </div>
+        <input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg">
+    </div>
+
+    <div class="actions">
+        <button class="btn" id="subConverterBtn">订阅转换器</button>
+        <button class="btn" id="getRandomLinkBtn">获取订阅链接</button>
+        <button class="btn" id="fetchBtn">生成订阅</button>
+    </div>
+
+    <div class="results" id="resultsContainer"></div>
+
+    <div class="import-card" id="importCard">
+        <div class="import-header">一键导入订阅至 App</div>
+        <div class="app-list">
+            <button class="app-btn" data-scheme="shadowrocket://add/">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">
+                <span class="app-name">导入到 Shadowrocket</span>
+            </button>
+            <button class="app-btn" data-scheme="v2rayng://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/v2rayNG.svg" alt="v2rayNG">
+                <span class="app-name">导入到 v2rayNG</span>
+            </button>
+            <button class="app-btn" data-scheme="clash://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashMetaforAndroid.svg" alt="Clash Meta">
+                <span class="app-name">导入到 Clash Meta</span>
+            </button>
+            <button class="app-btn" data-scheme="flclash://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Flclash.svg" alt="FlClash">
+                <span class="app-name">导入到 FlClash</span>
+            </button>
+            <button class="app-btn" data-scheme="surfboard:///install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Surfboard.svg" alt="Surfboard">
+                <span class="app-name">导入到 Surfboard</span>
+            </button>
+            <button class="app-btn" data-scheme="sing-box://import-remote-profile?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/singbox.svg" alt="Sing-box">
+                <span class="app-name">导入到 Sing-box</span>
+            </button>
+            <button class="app-btn" data-scheme="hiddify://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">
+                <span class="app-name">导入到 Hiddify</span>
+            </button>
+            <button class="app-btn" data-scheme="nekobox://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">
+                <span class="app-name">导入到 NekoBox</span>
+            </button>
+            <button class="app-btn" data-scheme="karing://install-config?url=">
+                <img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">
+                <span class="app-name">导入到 Karing</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="download-card" id="downloadCard">
+        <div class="import-header">客户端下载</div>
+        <div class="os-tabs" id="osTabs">
+            <button class="os-tab active" data-os="android" title="Android"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.52 15.34c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m-11.04 0c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m11.4-6.02l1.99-3.45a.41.41 0 00-.56-.15l-2.02 3.5A13.06 13.06 0 0012 7.8c-1.85 0-3.59.45-5.13 1.15l-2.02-3.5a.41.41 0 00-.56.15.41.41 0 00.15.56l1.99 3.45C2.68 11.18.34 14.65 0 18.76h24c-.34-4.11-2.68-7.58-6.11-9.44z"/></svg></button>
+            <button class="os-tab" data-os="windows" title="Windows"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M0 3.45L9.75 2.1v9.45H0m10.95-9.6l13.05-1.8v11.4H10.95M0 12.6h9.75v9.45L0 20.7M10.95 12.6H24V24l-12.95-1.8"/></svg></button>
+            <button class="os-tab" data-os="mac" title="macOS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button>
+            <button class="os-tab" data-os="ios" title="iOS"><span style="font-weight: bold; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">iOS</span></button>
+            <button class="os-tab" data-os="linux" title="Linux"><img src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Linux.svg" width="20" height="20" style="object-fit: contain;"></button>
+        </div>
+        <div class="app-grid" id="dlGrid"></div>
+    </div>
+</div>
+
+<script>
+    const mouse = { x: -1000, y: -1000 };
+
+    document.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
+        document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
+    });
+
+    document.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
+
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resizeCanvas() {
+        width = window.innerWidth; height = window.innerHeight;
+        canvas.width = width; canvas.height = height; initParticles();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.6; this.vy = (Math.random() - 0.5) * 0.6;
+            this.radius = Math.random() * 1.5 + 0.5;
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            const dx = mouse.x - this.x; const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) { this.x -= dx * 0.015; this.y -= dy * 0.015; }
+        }
+        draw(isWhiteTheme) {
+            ctx.fillStyle = isWhiteTheme ? 'rgba(0, 112, 243, 0.4)' : 'rgba(50, 145, 255, 0.5)';
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particles = []; const numParticles = Math.floor((width * height) / 3000); 
+        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        const isWhiteTheme = document.body.classList.contains('white-theme');
+        const lineColor = isWhiteTheme ? '0, 112, 243' : '50, 145, 255';
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update(); particles[i].draw(isWhiteTheme);
+            const dx = mouse.x - particles[i].x; const dy = mouse.y - particles[i].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 140) { 
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${lineColor}, ${0.4 * (1 - dist / 140)})`; 
+                ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    resizeCanvas(); animateParticles();
+
+    const customSelectWrapper = document.getElementById('customSelectWrapper');
+    const customSelectTrigger = document.getElementById('customSelectTrigger');
+    const customSelectTriggerText = customSelectTrigger.querySelector('span');
+    const customOptions = document.querySelectorAll('.custom-option');
+    const hiddenSubDomain = document.getElementById('subDomainSelect');
+
+    customSelectTrigger.addEventListener('click', (e) => {
+        customSelectWrapper.classList.toggle('open');
+        e.stopPropagation();
+    });
+
+    customOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const value = option.dataset.value;
+            customSelectTriggerText.textContent = value;
+            hiddenSubDomain.value = value;
+            
+            customOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            customSelectWrapper.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        customSelectWrapper.classList.remove('open');
+    });
+
+    const urlInput = document.getElementById('urlInput');
+    const promptText = "点击获取订阅链接，\n或直接粘贴 vless://、trojan://、vmess:// 等链接点击生成订阅...\n支持批量，每行一个";
+    let charIndex = 0;
+
+    function typeWriterEffect() {
+        if (charIndex < promptText.length) {
+            urlInput.setAttribute('placeholder', promptText.substring(0, charIndex + 1) + '_');
+            charIndex++; setTimeout(typeWriterEffect, Math.random() * 40 + 30);
+        } else {
+            let blinkCount = 0;
+            const blinkInterval = setInterval(() => {
+                blinkCount++; urlInput.setAttribute('placeholder', (blinkCount % 2 === 0) ? promptText + '_' : promptText);
+                if (blinkCount >= 6) { clearInterval(blinkInterval); urlInput.setAttribute('placeholder', promptText); }
+            }, 400);
+        }
+    }
+    setTimeout(typeWriterEffect, 600);
+
+    let currentFinalSubUrl = '';
+
+    function unescapeUnicode(str) { return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16))); }
+    function resolveReverseStrings(code) { return code.replace(/(['"])([^'"]*?)\1\.split\(['"]{2}\)\.reverse\(\)\.join\(['"]{2}\)/g, (match, quote, content) => { return `"${content.split('').reverse().join('')}"`; }); }
+    function extractDefaultValue(code, varName) {
+        const plainRegex = new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*(?:process\\.env\\.[A-Za-z0-9_]+\\s*\\|\\|\\s*)?(['"\`])(.*?)\\1`, 'i');
+        const plainMatch = code.match(plainRegex); if (plainMatch) return plainMatch[2];
+        const regex = new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;]+);`, 'i');
+        const match = code.match(regex); if (!match) return null;
+        let expr = match[1].trim(); const orIndex = expr.lastIndexOf('||');
+        if (orIndex !== -1) expr = expr.substring(orIndex + 2).trim();
+        expr = expr.replace(/;.*$/, '').trim();
+        const strMatch = expr.match(/^(['"])(.*)\1$/); if (strMatch) return strMatch[2];
+        try { const result = eval(expr); if (typeof result === 'string') return result; } catch (e) {} return null;
+    }
+    function parseConfig(code) {
+        try {
+            let decoded = unescapeUnicode(code); decoded = resolveReverseStrings(decoded);
+            const domain = extractDefaultValue(decoded, 'DOMAIN'); const subPath = extractDefaultValue(decoded, 'SUB_PATH');
+            if (domain && subPath) return { domain, subPath }; return null;
+        } catch (e) { return null; }
+    }
+    function buildUrl(domain, subPath) {
+        domain = domain.replace(/^https?:\/\//, ''); subPath = subPath.replace(/^\/+/, ''); return `https://${domain}/${subPath}`;
+    }
+    function decodeBase64Safe(str) {
+        try { return decodeURIComponent(escape(atob(str))); } catch(e) { try { return atob(str); } catch(e2) { return str; } }
+    }
+
+    function getSelectedSubDomain() { return document.getElementById('subDomainSelect').value; }
+
+    function copyToClipboard(text) {
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px'; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (err) {} document.body.removeChild(ta);
+    }
+    function processDirectNode(link) {
+        const vlessMatch = link.match(/vless:\/\/([a-fA-F0-9\-]+)@[^?]+\?([^#\n\r]+)/);
+        if (vlessMatch) { const uuid = vlessMatch[1]; const params = vlessMatch[2]; const subDomain = getSelectedSubDomain(); return { success: true, url: `https://${subDomain}/sub?uuid=${uuid}&${params}` }; }
+        return { success: false, error: 'ERR' };
+    }
+
+    const resultsContainer = document.getElementById('resultsContainer');
+    const importCard = document.getElementById('importCard');
+    let clearTimer = null;
+
+    function renderAndAnimate(results) {
+        resultsContainer.innerHTML = ''; importCard.style.display = 'none'; currentFinalSubUrl = ''; clearTimeout(clearTimer);
+        let html = ''; let successfulUrls = [];
+        for (const item of results) {
+            if (item.success) {
+                successfulUrls.push(item.url);
+                html += `<div class="result-item"><div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="info-group"><a href="${item.url}" target="_blank" class="url">${item.url}</a><div class="auto-copy-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> 已自动复制到剪贴板</div></div></div>`;
+            } else {
+                html += `<div class="result-item fail"><div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div><div class="info-group"><span class="error-msg">${item.error}</span></div></div>`;
+            }
+        }
+        resultsContainer.innerHTML = html;
+        if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\n')); importCard.style.display = 'block'; }
+        clearTimer = setTimeout(() => {
+            const items = document.querySelectorAll('.result-item'); items.forEach(el => el.classList.add('fade-out'));
+            setTimeout(() => { resultsContainer.innerHTML = ''; }, 600);
+        }, 3000);
+    }
+
+    function getProxyUrl(url) { return 'https://corsproxy.io/?' + encodeURIComponent(url); }
+
+    async function processAndFetchDeep(urlStr) {
+        try {
+            const configResponse = await fetch(getProxyUrl(urlStr));
+            if (!configResponse.ok) throw new Error();
+            const rawText = await configResponse.text(); const decodedText = decodeBase64Safe(rawText);
+            let res = processDirectNode(decodedText); if (res.success) return res;
+            res = processDirectNode(rawText); if (res.success) return res;
+            return { success: false, error: 'ERR' };
+        } catch (err) { return { success: false, error: 'ERR' }; }
+    }
+
+    async function executeRemoteFetch(urls) {
+        fetchBtn.disabled = true; fetchBtn.textContent = '...';
+        const results = [];
+        for (const url of urls) {
+            if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
+            try {
+                const response = await fetch(getProxyUrl(url));
+                if (!response.ok) throw new Error();
+                const code = await response.text(); const config = parseConfig(code);
+                if (config) {
+                    const targetUrl = buildUrl(config.domain, config.subPath);
+                    const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult);
+                } else { results.push({ success: false, error: 'ERR' }); }
+            } catch (err) { results.push({ success: false, error: 'ERR' }); }
+        }
+        renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
+    }
+
+    const fetchBtn = document.getElementById('fetchBtn');
+    fetchBtn.addEventListener('click', () => {
+        const raw = urlInput.value.trim(); if (!raw) return;
+        const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
+        executeRemoteFetch(urls);
+    });
+
+    urlInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); fetchBtn.click(); }
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', () => { document.body.classList.toggle('white-theme'); });
+
+    document.getElementById('subConverterBtn').addEventListener('click', () => {
+        window.open('https://sub.cmliussss.com/', '_blank');
+    });
+
+    document.querySelectorAll('.app-btn').forEach(btn => {
+        btn.addEventListener('click', function() { 
+            if (!currentFinalSubUrl || !this.dataset.scheme) return; 
+            
+            const scheme = this.dataset.scheme;
+            let targetType = 'auto';
+
+            if (scheme.includes('clash') || scheme.includes('flclash')) {
+                targetType = 'clash';
+            } else if (scheme.includes('surfboard')) {
+                targetType = 'surfboard';
+            } else if (scheme.includes('sing-box')) {
+                targetType = 'singbox';
+            }
+            
+            const convertedUrl = `https://url.v1.mk/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
+            
+            window.location.href = scheme + encodeURIComponent(convertedUrl); 
+        });
+    });
+
+    const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');
+    getRandomLinkBtn.addEventListener('click', async () => {
+        try {
+            getRandomLinkBtn.disabled = true;
+            getRandomLinkBtn.textContent = '...';
+            const res = await fetch(getProxyUrl('https://seep.eu.org/https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'));
+            if (!res.ok) throw new Error();
+            let text = await res.text();
+            try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
+            const urls = text.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
+            if (urls.length === 0) throw new Error();
+            executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
+        } catch (err) {
+        } finally {
+            getRandomLinkBtn.disabled = false;
+            getRandomLinkBtn.textContent = '获取订阅链接';
+        }
+    });
+
+    const v2rayNGIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/v2rayNG.svg" alt="v2rayNG">`;
+    const clashIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashMetaforAndroid.svg" alt="Clash Meta">`;
+    const clashVergeIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashVergeRev.svg" alt="Clash Verge">`;
+    const flClashIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Flclash.svg" alt="FlClash">`;
+    const surfboardIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Surfboard.svg" alt="Surfboard">`;
+    const singboxIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/singbox.svg" alt="Sing-box">`;
+    const hiddifyIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">`;
+    const nekoIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">`;
+    const karingIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">`;
+    const shadowrocketIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">`;
+
+    const dlData = {
+        android: [
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Android Universal APK', repo: 'chen08209/FlClash', match: 'android-arm64-v8a.apk' } ] },
+            { name: 'v2rayNG', icon: v2rayNGIcon, links: [ { name: 'Universal APK', repo: '2dust/v2rayNG', match: 'universal.apk' }, { name: 'Arm64 APK', repo: '2dust/v2rayNG', match: 'arm64-v8a.apk' } ] },
+            { name: 'Clash Meta for Android', icon: clashIcon, links: [ { name: 'Release APK', repo: 'MetaCubeX/ClashMetaForAndroid', match: 'meta-universal-release.apk' } ] },
+            { name: 'Surfboard', icon: surfboardIcon, links: [ { name: 'Universal APK', repo: 'getsurfboard/surfboard', match: 'universal-release.apk' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Android Universal APK', repo: 'hiddify/hiddify-next', match: 'Android-universal.apk' } ] },
+            { name: 'NekoBoxForAndroid', icon: nekoIcon, links: [ { name: 'Arm64 APK', repo: 'MatsuriDayo/NekoBoxForAndroid', match: 'arm64-v8a.apk' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Android Arm64 APK', repo: 'KaringX/karing', match: 'android_arm64-v8a.apk' } ] }
+        ],
+        windows: [
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'Windows Setup (x64)', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64-setup.exe' }, { name: 'Windows Portable', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64.app.tar.gz' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Windows Setup (x64)', repo: 'chen08209/FlClash', match: 'windows-amd64-setup.exe' } ] },
+            { name: 'v2rayN', icon: v2rayNGIcon, links: [ { name: 'Windows Desktop (Zip)', repo: '2dust/v2rayN', match: 'windows-64-desktop.zip' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Windows (amd64)', repo: 'SagerNet/sing-box', match: 'windows-amd64.zip' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Windows Setup', repo: 'hiddify/hiddify-next', match: 'Windows-Setup-x64.exe' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Windows (Zip)', repo: 'MatsuriDayo/nekoray', match: 'windows64.zip' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Windows Setup', repo: 'KaringX/karing', match: 'windows_x64.exe' } ] }
+        ],
+        mac: [
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'aarch64.dmg' }, { name: 'macOS Intel (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64.dmg' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'chen08209/FlClash', match: 'macos-arm64.dmg' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'macOS DMG', repo: 'hiddify/hiddify-next', match: 'MacOS.dmg' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] },
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'Mac App Store (Apple Silicon)', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] }
+        ],
+        ios: [
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/sing-box/id6451299863' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777032' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/karing/id6471343750' } ] }
+        ],
+        linux: [
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'Linux amd64 Deb', repo: 'clash-verge-rev/clash-verge-rev', match: 'amd64.deb' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Linux AppImage', repo: 'chen08209/FlClash', match: 'linux-amd64.AppImage' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Linux amd64 Deb', repo: 'SagerNet/sing-box', match: 'linux_amd64.deb' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Linux AppImage', repo: 'hiddify/hiddify-next', match: 'Linux-x64-AppImage.AppImage' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Linux AppImage', repo: 'MatsuriDayo/nekoray', match: 'linux-x64.AppImage' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Linux amd64 Deb', repo: 'KaringX/karing', match: 'linux_amd64.deb' } ] }
+        ]
+    };
+
+    const dlGrid = document.getElementById('dlGrid');
+    const osTabs = document.querySelectorAll('.os-tab');
+
+    function renderOS(os) {
+        dlGrid.innerHTML = '';
+        dlData[os].forEach(app => {
+            const wrap = document.createElement('div');
+            wrap.className = 'dl-item';
+            const linksHTML = app.links.map(l => {
+                if (l.url) {
+                    return `<a class="dl-link" href="${l.url}" target="_blank"><svg class="dl-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>${l.name}</a>`;
+                } else if (l.repo) {
+                    return `<a class="dl-link dynamic-dl" href="#" data-repo="${l.repo}" data-match="${l.match}"><svg class="dl-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span class="dl-text">${l.name}</span></a>`;
+                }
+            }).join('');
+            wrap.innerHTML = `<button class="app-btn dl-header">${app.icon}<span class="app-name">${app.name}</span><svg class="dl-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="dl-links">${linksHTML}</div>`;
+            dlGrid.appendChild(wrap);
+            wrap.querySelector('.dl-header').addEventListener('click', () => {
+                const ls = wrap.querySelector('.dl-links');
+                const isOpen = ls.classList.contains('open');
+                document.querySelectorAll('.dl-links').forEach(e => e.classList.remove('open'));
+                document.querySelectorAll('.dl-chevron').forEach(e => e.style.transform = 'rotate(0deg)');
+                if (!isOpen) {
+                    ls.classList.add('open');
+                    wrap.querySelector('.dl-chevron').style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    }
+
+    document.addEventListener('click', async (e) => {
+        const dlLink = e.target.closest('.dynamic-dl');
+        if (!dlLink) return;
+        e.preventDefault();
+        if (dlLink.classList.contains('loading')) return;
+
+        const textSpan = dlLink.querySelector('.dl-text');
+        const originalText = textSpan.innerText;
+        textSpan.innerText = '获取中...';
+        dlLink.classList.add('loading');
+
+        try {
+            const repo = dlLink.dataset.repo;
+            const matchStr = dlLink.dataset.match;
+            const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
+            if (!res.ok) throw new Error('ERR');
+            const data = await res.json();
+
+            const asset = data.assets.find(a => a.name.includes(matchStr));
+            if (asset) {
+                textSpan.innerText = '下载中...';
+                window.location.href = 'https://jsnzkpg4.pages.dev/' + asset.browser_download_url;
+                setTimeout(() => { textSpan.innerText = originalText; dlLink.classList.remove('loading'); }, 2000);
+            } else {
+                window.open(`https://github.com/${repo}/releases/latest`, '_blank');
+                textSpan.innerText = originalText;
+                dlLink.classList.remove('loading');
+            }
+        } catch (err) {
+            window.open(`https://github.com/${dlLink.dataset.repo}/releases/latest`, '_blank');
+            textSpan.innerText = originalText;
+            dlLink.classList.remove('loading');
+        }
+    });
+
+    osTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            osTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            renderOS(this.dataset.os);
+        });
+    });
+
+    renderOS('android');
+
+</script>
 </body>
 </html>

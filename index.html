@@ -138,64 +138,6 @@
 
         .theme-toggle:hover svg { transform: scale(1.1); }
 
-        .tab-wrapper {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .tab-group {
-            display: inline-flex;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            transition: background 0.4s, border-color 0.4s;
-        }
-
-        body.white-theme .tab-group {
-            background: rgba(255, 255, 255, 0.65);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .tab-btn {
-            padding: 8px 18px;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-        }
-
-        body.white-theme .tab-btn { color: rgba(0, 0, 0, 0.4); }
-        .tab-btn:hover { color: rgba(255, 255, 255, 0.8); }
-        body.white-theme .tab-btn:hover { color: rgba(0, 0, 0, 0.7); }
-
-        .tab-btn.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-        body.white-theme .tab-btn.active {
-            background: rgba(0, 0, 0, 0.05);
-            color: #000000;
-        }
-
-        .panel {
-            display: none;
-            animation: fadeIn 0.3s ease forwards;
-        }
-        .panel.active { display: block; }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
@@ -208,7 +150,7 @@
             font-family: ui-monospace, Consolas, monospace;
             border-radius: 16px;
             resize: vertical;
-            min-height: 220px;
+            min-height: 320px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -247,70 +189,6 @@
             box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15);
         }
 
-        .upload-zone {
-            width: 100%;
-            min-height: 220px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 2px dashed rgba(255, 255, 255, 0.25);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #888;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.02), 0 10px 30px -10px rgba(0,0,0,0.5);
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-        }
-
-        .upload-zone:hover, .upload-zone.drag-over {
-            border-color: #3291ff;
-            color: #eaeaea;
-            background: rgba(0, 112, 243, 0.08);
-            box-shadow: inset 0 0 30px rgba(0, 112, 243, 0.15), 0 0 20px rgba(0, 112, 243, 0.1);
-        }
-
-        body.white-theme .upload-zone {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-            border: 2px dashed rgba(0, 0, 0, 0.15);
-            color: #666;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05);
-        }
-        body.white-theme .upload-zone:hover, body.white-theme .upload-zone.drag-over {
-            border-color: #0070f3;
-            color: #111;
-            background: rgba(0, 112, 243, 0.05);
-        }
-
-        .upload-icon {
-            width: 42px;
-            height: 42px;
-            margin-bottom: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 1.5;
-            transition: transform 0.3s;
-        }
-        .upload-zone:hover .upload-icon {
-            transform: translateY(-4px);
-            color: #3291ff;
-        }
-
-        .upload-title {
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-        .upload-subtitle {
-            font-size: 13px;
-            opacity: 0.5;
-            font-family: ui-monospace, monospace;
-        }
-
         .settings-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(12px);
@@ -318,7 +196,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 14px 18px;
-            margin-top: 16px;
+            margin-top: 24px;
             margin-bottom: 24px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             display: flex;
@@ -555,10 +433,6 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.06);
         }
 
-        @keyframes floatAndFade {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-30px) scale(0.98); filter: blur(1px); }
-        }
         .result-item.fade-out {
             animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -636,7 +510,7 @@
 
         @media (max-width: 600px) {
             .container { padding: 0 8px; }
-            textarea, .upload-zone { min-height: 180px; }
+            textarea { min-height: 260px; }
             .app-btn { padding: 12px 16px; }
             .app-icon { width: 22px; height: 22px; }
             .app-name { font-size: 14px; margin-left: 14px; }
@@ -659,29 +533,7 @@
         </div>
     </div>
 
-    <div class="tab-wrapper">
-        <div class="tab-group" id="tabs">
-            <button class="tab-btn active" data-target="remotePanel">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            </button>
-            <button class="tab-btn" data-target="localPanel">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            </button>
-        </div>
-    </div>
-
-    <div class="panel active" id="remotePanel">
-        <textarea id="urlInput" placeholder=""></textarea>
-    </div>
-
-    <div class="panel" id="localPanel">
-        <div class="upload-zone" id="uploadZone">
-            <input type="file" id="fileInput" multiple accept=".js,.txt" style="display: none;">
-            <svg class="upload-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7-5-5-5 5m5-5v12"/></svg>
-            <div class="upload-title">点击选择或拖拽本地 .js 文件</div>
-            <div class="upload-subtitle">无需上传服务器 · 本地极速解析</div>
-        </div>
-    </div>
+    <textarea id="urlInput" placeholder=""></textarea>
 
     <div class="settings-card">
         <span class="setting-label">优选订阅器</span>
@@ -914,7 +766,7 @@
     function processDirectNode(link) {
         const vlessMatch = link.match(/vless:\/\/([a-fA-F0-9\-]+)@[^?]+\?([^#\n\r]+)/);
         if (vlessMatch) { const uuid = vlessMatch[1]; const params = vlessMatch[2]; const subDomain = getSelectedSubDomain(); return { success: true, url: `https://${subDomain}/sub?uuid=${uuid}&${params}` }; }
-        return { success: false, error: '加载失败' };
+        return { success: false, error: 'ERR' };
     }
 
     const resultsContainer = document.getElementById('resultsContainer');
@@ -949,12 +801,12 @@
             const rawText = await configResponse.text(); const decodedText = decodeBase64Safe(rawText);
             let res = processDirectNode(decodedText); if (res.success) return res;
             res = processDirectNode(rawText); if (res.success) return res;
-            return { success: false, error: '加载失败' };
-        } catch (err) { return { success: false, error: '加载失败' }; }
+            return { success: false, error: 'ERR' };
+        } catch (err) { return { success: false, error: 'ERR' }; }
     }
 
     async function executeRemoteFetch(urls) {
-        fetchBtn.disabled = true; fetchBtn.textContent = '深度解析中...';
+        fetchBtn.disabled = true; fetchBtn.textContent = '...';
         const results = [];
         for (const url of urls) {
             if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
@@ -965,56 +817,21 @@
                 if (config) {
                     const targetUrl = buildUrl(config.domain, config.subPath);
                     const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult);
-                } else { results.push({ success: false, error: '加载失败' }); }
-            } catch (err) { results.push({ success: false, error: '加载失败' }); }
+                } else { results.push({ success: false, error: 'ERR' }); }
+            } catch (err) { results.push({ success: false, error: 'ERR' }); }
         }
         renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
     }
 
     const fetchBtn = document.getElementById('fetchBtn');
     fetchBtn.addEventListener('click', () => {
-        const activeTab = document.querySelector('.tab-btn.active').dataset.target;
-        if (activeTab === 'remotePanel') {
-            const raw = urlInput.value.trim(); if (!raw) return;
-            const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
-            executeRemoteFetch(urls);
-        }
+        const raw = urlInput.value.trim(); if (!raw) return;
+        const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
+        executeRemoteFetch(urls);
     });
 
     urlInput.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); fetchBtn.click(); }
-    });
-
-    const uploadZone = document.getElementById('uploadZone');
-    const fileInput = document.getElementById('fileInput');
-    uploadZone.addEventListener('click', () => fileInput.click());
-    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-    uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('drag-over'); });
-    uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('drag-over'); if (e.dataTransfer.files.length > 0) processLocalFiles(e.dataTransfer.files); });
-    fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) processLocalFiles(e.target.files); fileInput.value = ''; });
-
-    async function processLocalFiles(files) {
-        fetchBtn.disabled = true; fetchBtn.textContent = '深度解析中...'; const results = [];
-        for (const file of files) {
-            if (!file.name.endsWith('.js') && !file.name.endsWith('.txt')) { results.push({ success: false, error: '加载失败' }); continue; }
-            try {
-                const text = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = e => resolve(e.target.result); reader.onerror = e => reject(new Error()); reader.readAsText(file); });
-                if (/^(vless|trojan|ss|vmess):\/\//i.test(text.trim())) { results.push(processDirectNode(text.trim())); continue; }
-                const config = parseConfig(text);
-                if (config) { const targetUrl = buildUrl(config.domain, config.subPath); const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult); } 
-                else { results.push({ success: false, error: '加载失败' }); }
-            } catch (err) { results.push({ success: false, error: '加载失败' }); }
-        }
-        renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
-    }
-
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const panels = document.querySelectorAll('.panel');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active')); panels.forEach(p => p.classList.remove('active'));
-            btn.classList.add('active'); document.getElementById(btn.dataset.target).classList.add('active');
-        });
     });
 
     document.getElementById('themeToggle').addEventListener('click', () => { document.body.classList.toggle('white-theme'); });
@@ -1048,14 +865,13 @@
     getRandomLinkBtn.addEventListener('click', async () => {
         try {
             getRandomLinkBtn.disabled = true;
-            getRandomLinkBtn.textContent = '获取中...';
+            getRandomLinkBtn.textContent = '...';
             const res = await fetch(getProxyUrl('https://seep.eu.org/https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'));
             if (!res.ok) throw new Error();
             let text = await res.text();
             try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
             const urls = text.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
             if (urls.length === 0) throw new Error();
-            document.querySelector('.tab-btn[data-target="remotePanel"]').click(); 
             executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
         } catch (err) {
         } finally {

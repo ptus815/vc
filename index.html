@@ -12,10 +12,8 @@
         }
 
         body {
-            /* 添加 CSS 变量用于鼠标光晕追踪 */
             --mouse-x: 50vw;
             --mouse-y: 50vh;
-            
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -28,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* 网格流动动画 */
         @keyframes gridMove {
             0% { background-position: 0 0; }
             100% { background-position: 40px 40px; }
@@ -48,11 +45,9 @@
             pointer-events: none;
             z-index: 0;
             transition: background-image 0.4s ease;
-            /* 让网格进行 15秒 的无限匀速循环滚动 */
             animation: gridMove 15s linear infinite; 
         }
 
-        /* 鼠标跟随的高科技光晕扩散层 */
         body::after {
             content: '';
             position: fixed;
@@ -81,7 +76,6 @@
             color: #111111;
         }
 
-        /* 提升主容器层级，确保在特效层上方 */
         .container {
             position: relative;
             z-index: 2;
@@ -97,7 +91,7 @@
             padding-bottom: 16px;
             border-bottom: 1px solid rgba(255,255,255,0.15);
         }
-        
+
         body.white-theme .header {
             border-bottom-color: rgba(0,0,0,0.1);
         }
@@ -107,13 +101,13 @@
             align-items: center;
             gap: 16px;
         }
-        
+
         .logo-svg {
             width: 42px;
             height: 42px;
             fill: currentColor;
         }
-        
+
         .logo-text {
             font-size: 28px;
             font-weight: 700;
@@ -129,22 +123,20 @@
             height: 42px;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         .theme-toggle svg {
             width: 32px;
             height: 32px;
             fill: currentColor;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
-        
+
         .moon-icon { display: block; }
         .sun-icon { display: none; }
         body.white-theme .moon-icon { display: none; }
         body.white-theme .sun-icon { display: block; }
-        
-        .theme-toggle:hover svg {
-            transform: scale(1.1);
-        }
+
+        .theme-toggle:hover svg { transform: scale(1.1); }
 
         .tab-wrapper {
             display: flex;
@@ -187,7 +179,7 @@
         body.white-theme .tab-btn { color: rgba(0, 0, 0, 0.3); }
         .tab-btn:hover { color: rgba(255, 255, 255, 0.8); }
         body.white-theme .tab-btn:hover { color: rgba(0, 0, 0, 0.7); }
-        
+
         .tab-btn.active {
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
@@ -372,12 +364,13 @@
             display: flex;
             justify-content: flex-end;
             margin-bottom: 30px;
+            gap: 16px; 
         }
-        
+
         .btn {
             background: #ffffff;
             color: #000000;
-            padding: 12px 42px;
+            padding: 12px 28px; 
             border-radius: 40px;
             border: none;
             cursor: pointer;
@@ -403,6 +396,23 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         body.white-theme .btn:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
+
+        #getRandomLinkBtn {
+            background: #3291ff;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(50, 145, 255, 0.25);
+        }
+        #getRandomLinkBtn:hover {
+            box-shadow: 0 6px 16px rgba(50, 145, 255, 0.4);
+        }
+        body.white-theme #getRandomLinkBtn {
+            background: #0070f3;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 112, 243, 0.25);
+        }
+        body.white-theme #getRandomLinkBtn:hover {
+            box-shadow: 0 6px 16px rgba(0, 112, 243, 0.4);
+        }
 
         .results {
             display: flex;
@@ -448,45 +458,18 @@
             animation: floatAndFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        .icon-box {
-            margin-right: 18px;
-            color: #3291ff;
-        }
-        .info-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .url {
-            font-size: 14px;
-            color: #eaeaea;
-            font-family: ui-monospace, Consolas, monospace;
-            font-weight: 500;
-            word-break: break-all;
-            text-decoration: none;
-            line-height: 1.5;
-        }
+        .icon-box { margin-right: 18px; color: #3291ff; }
+        .info-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .url { font-size: 14px; color: #eaeaea; font-family: ui-monospace, Consolas, monospace; font-weight: 500; word-break: break-all; text-decoration: none; line-height: 1.5; }
         body.white-theme .url { color: #111; }
-        
-        .auto-copy-tag {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: #3291ff;
-            font-weight: 600;
-        }
+
+        .auto-copy-tag { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3291ff; font-weight: 600; }
         .auto-copy-tag svg { width: 14px; height: 14px; }
 
         .result-item.fail { border-color: rgba(255, 50, 50, 0.4); }
         .result-item.fail::before { background: #ff3333; box-shadow: 0 0 12px #ff3333; }
         .result-item.fail .icon-box { color: #ff3333; }
-        .result-item.fail .error-msg {
-            font-size: 14px;
-            color: #ff5555;
-            font-family: ui-monospace, monospace;
-        }
+        .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; }
 
         .import-card {
             background: rgba(0, 0, 0, 0.7);
@@ -505,67 +488,18 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.05);
         }
 
-        .import-header {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #eaeaea;
-            letter-spacing: 0.5px;
-        }
+        .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; }
         body.white-theme .import-header { color: #111111; }
-
-        .app-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .app-list { display: flex; flex-direction: column; gap: 12px; }
 
         .app-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 14px 20px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #eaeaea;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
+            width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none; -webkit-tap-highlight-color: transparent;
         }
-        body.white-theme .app-btn {
-            background: rgba(0, 0, 0, 0.02);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #111111;
-        }
-        .app-btn:hover {
-            border-color: #3291ff;
-            background: rgba(50, 145, 255, 0.08);
-            color: #3291ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15);
-        }
-        body.white-theme .app-btn:hover {
-            border-color: #0070f3;
-            background: rgba(0, 112, 243, 0.05);
-            color: #0070f3;
-            box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1);
-        }
-
-        .app-icon {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-            stroke-width: 2;
-        }
-        .app-name {
-            font-size: 15px;
-            font-weight: 500;
-            margin-left: 16px;
-        }
+        body.white-theme .app-btn { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.1); color: #111111; }
+        .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); }
+        body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.05); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); }
+        .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; }
+        .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; }
 
         @media (max-width: 600px) {
             .container { padding: 0 8px; }
@@ -573,12 +507,13 @@
             .app-btn { padding: 12px 16px; }
             .app-icon { width: 22px; height: 22px; }
             .app-name { font-size: 14px; margin-left: 14px; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<!-- 新增：交互式底层粒子星网 -->
 <canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
 
 <div class="container">
@@ -589,48 +524,29 @@
         </div>
         <div class="theme-toggle" id="themeToggle">
             <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </div>
     </div>
 
     <div class="tab-wrapper">
         <div class="tab-group" id="tabs">
             <button class="tab-btn active" data-target="remotePanel">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
             </button>
             <button class="tab-btn" data-target="localPanel">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
             </button>
         </div>
     </div>
 
     <div class="panel active" id="remotePanel">
-        <!-- 注意：这里的 placeholder 留空，将由 JS 的打字机特效接管 -->
         <textarea id="urlInput" placeholder=""></textarea>
     </div>
 
     <div class="panel" id="localPanel">
         <div class="upload-zone" id="uploadZone">
             <input type="file" id="fileInput" multiple accept=".js,.txt" style="display: none;">
-            <svg class="upload-icon" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7-5-5-5 5m5-5v12"/>
-            </svg>
+            <svg class="upload-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7-5-5-5 5m5-5v12"/></svg>
             <div class="upload-title">点击选择或拖拽本地 .js 文件</div>
             <div class="upload-subtitle">无需上传服务器 · 本地极速解析</div>
         </div>
@@ -639,9 +555,8 @@
     <div class="settings-card">
         <span class="setting-label">优选订阅器</span>
         <select class="setting-select" id="subDomainSelect">
-            <option value="random">🎲随机匹配</option>
+            <option value="sub.eooce.xx.kg" selected>sub.eooce.xx.kg</option>
             <option value="owo.o00o.ooo">owo.o00o.ooo</option>
-            <option value="sub.eooce.xx.kg">sub.eooce.xx.kg</option>
             <option value="zrf.zrf.me">zrf.zrf.me</option>
             <option value="sub.keaeye.icu">sub.keaeye.icu</option>
             <option value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</option>
@@ -650,6 +565,7 @@
     </div>
 
     <div class="actions">
+        <button class="btn" id="getRandomLinkBtn">获取订阅链接</button>
         <button class="btn" id="fetchBtn">生成订阅</button>
     </div>
 
@@ -675,7 +591,7 @@
                 <span class="app-name">导入到 Surfboard</span>
             </button>
             <button class="app-btn" data-scheme="sing-box://import-remote-profile?url=">
-                <svg class="app-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <svg class="app-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 17 22 12"/></svg>
                 <span class="app-name">导入到 Sing-box</span>
             </button>
             <button class="app-btn" data-scheme="hiddify://install-config?url=">
@@ -699,12 +615,8 @@
 </div>
 
 <script>
-    // ==========================================
-    // 鼠标联动光晕与 Canvas 粒子星网背景
-    // ==========================================
     const mouse = { x: -1000, y: -1000 };
-    
-    // 追踪鼠标位置，修改 CSS 变量以控制背景手电筒光晕
+
     document.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
@@ -712,236 +624,117 @@
         document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
     });
 
-    document.addEventListener('mouseout', () => {
-        mouse.x = -1000;
-        mouse.y = -1000;
-    });
+    document.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
 
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let width, height, particles = [];
 
     function resizeCanvas() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-        initParticles();
+        width = window.innerWidth; height = window.innerHeight;
+        canvas.width = width; canvas.height = height; initParticles();
     }
     window.addEventListener('resize', resizeCanvas);
 
     class Particle {
         constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.6; // 随机漂浮速度
-            this.vy = (Math.random() - 0.5) * 0.6;
-            this.radius = Math.random() * 1.5 + 0.5; // 节点大小
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.6; this.vy = (Math.random() - 0.5) * 0.6;
+            this.radius = Math.random() * 1.5 + 0.5;
         }
         update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            
-            // 边缘反弹
+            this.x += this.vx; this.y += this.vy;
             if (this.x < 0 || this.x > width) this.vx = -this.vx;
             if (this.y < 0 || this.y > height) this.vy = -this.vy;
-
-            // 与鼠标的物理排斥效果（引力场）
-            const dx = mouse.x - this.x;
-            const dy = mouse.y - this.y;
+            const dx = mouse.x - this.x; const dy = mouse.y - this.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
-                this.x -= dx * 0.015; // 距离越近，排斥越快
-                this.y -= dy * 0.015;
-            }
+            if (dist < 150) { this.x -= dx * 0.015; this.y -= dy * 0.015; }
         }
         draw(isWhiteTheme) {
             ctx.fillStyle = isWhiteTheme ? 'rgba(0, 112, 243, 0.4)' : 'rgba(50, 145, 255, 0.5)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill();
         }
     }
 
     function initParticles() {
-        particles = [];
-        // 修改：降低除数，从而显著增加粒子的数量（提高密度）
-        const numParticles = Math.floor((width * height) / 3000); 
-        for (let i = 0; i < numParticles; i++) {
-            particles.push(new Particle());
-        }
+        particles = []; const numParticles = Math.floor((width * height) / 3000); 
+        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
     }
 
     function animateParticles() {
         ctx.clearRect(0, 0, width, height);
         const isWhiteTheme = document.body.classList.contains('white-theme');
         const lineColor = isWhiteTheme ? '0, 112, 243' : '50, 145, 255';
-
         for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw(isWhiteTheme);
-
-            // 当鼠标靠近时，粒子与鼠标之间产生数据连线
-            const dx = mouse.x - particles[i].x;
-            const dy = mouse.y - particles[i].y;
+            particles[i].update(); particles[i].draw(isWhiteTheme);
+            const dx = mouse.x - particles[i].x; const dy = mouse.y - particles[i].y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            // 修改：稍微缩短连线距离，防止粒子增多后连线显得杂乱
             if (dist < 140) { 
                 ctx.beginPath();
-                // 距离越近，线条越清晰
                 ctx.strokeStyle = `rgba(${lineColor}, ${0.4 * (1 - dist / 140)})`; 
-                ctx.lineWidth = 1;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(mouse.x, mouse.y);
-                ctx.stroke();
+                ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
             }
         }
         requestAnimationFrame(animateParticles);
     }
-    resizeCanvas();
-    animateParticles();
+    resizeCanvas(); animateParticles();
 
-
-    // ==========================================
-    // 科技感打字机效果 (Placeholder 终端打印)
-    // ==========================================
     const urlInput = document.getElementById('urlInput');
     const promptText = "在此粘贴远程 .js 文件链接，\n或直接粘贴 vless://、trojan://、vmess:// 等原生节点链接...\n支持批量，每行一个";
     let charIndex = 0;
-    
+
     function typeWriterEffect() {
         if (charIndex < promptText.length) {
-            // 末尾增加下划线光标模拟敲代码
             urlInput.setAttribute('placeholder', promptText.substring(0, charIndex + 1) + '_');
-            charIndex++;
-            // 随机延迟（30~70毫秒）模拟真实敲击节奏
-            setTimeout(typeWriterEffect, Math.random() * 40 + 30);
+            charIndex++; setTimeout(typeWriterEffect, Math.random() * 40 + 30);
         } else {
-            // 打印完成后，光标闪烁 3 次后消失
             let blinkCount = 0;
             const blinkInterval = setInterval(() => {
-                blinkCount++;
-                urlInput.setAttribute('placeholder', (blinkCount % 2 === 0) ? promptText + '_' : promptText);
-                if (blinkCount >= 6) {
-                    clearInterval(blinkInterval);
-                    urlInput.setAttribute('placeholder', promptText); // 定格
-                }
+                blinkCount++; urlInput.setAttribute('placeholder', (blinkCount % 2 === 0) ? promptText + '_' : promptText);
+                if (blinkCount >= 6) { clearInterval(blinkInterval); urlInput.setAttribute('placeholder', promptText); }
             }, 400);
         }
     }
-    // 延迟 0.6 秒后再触发打字动画，体验更好
     setTimeout(typeWriterEffect, 600);
 
-
-    // ==========================================
-    // 核心业务逻辑
-    // ==========================================
     let currentFinalSubUrl = '';
 
-    function unescapeUnicode(str) {
-        return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-    }
-
-    function resolveReverseStrings(code) {
-        return code.replace(/(['"])([^'"]*?)\1\.split\(['"]{2}\)\.reverse\(\)\.join\(['"]{2}\)/g, (match, quote, content) => {
-            return `"${content.split('').reverse().join('')}"`;
-        });
-    }
-
+    function unescapeUnicode(str) { return str.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16))); }
+    function resolveReverseStrings(code) { return code.replace(/(['"])([^'"]*?)\1\.split\(['"]{2}\)\.reverse\(\)\.join\(['"]{2}\)/g, (match, quote, content) => { return `"${content.split('').reverse().join('')}"`; }); }
     function extractDefaultValue(code, varName) {
         const plainRegex = new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*(?:process\\.env\\.[A-Za-z0-9_]+\\s*\\|\\|\\s*)?(['"\`])(.*?)\\1`, 'i');
-        const plainMatch = code.match(plainRegex);
-        if (plainMatch) return plainMatch[2];
-
+        const plainMatch = code.match(plainRegex); if (plainMatch) return plainMatch[2];
         const regex = new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;]+);`, 'i');
-        const match = code.match(regex);
-        if (!match) return null;
-        let expr = match[1].trim();
-        const orIndex = expr.lastIndexOf('||');
-        if (orIndex !== -1) {
-            expr = expr.substring(orIndex + 2).trim();
-        }
+        const match = code.match(regex); if (!match) return null;
+        let expr = match[1].trim(); const orIndex = expr.lastIndexOf('||');
+        if (orIndex !== -1) expr = expr.substring(orIndex + 2).trim();
         expr = expr.replace(/;.*$/, '').trim();
-        const strMatch = expr.match(/^(['"])(.*)\1$/);
-        if (strMatch) return strMatch[2];
-        try {
-            const result = eval(expr);
-            if (typeof result === 'string') return result;
-        } catch (e) {}
-        return null;
+        const strMatch = expr.match(/^(['"])(.*)\1$/); if (strMatch) return strMatch[2];
+        try { const result = eval(expr); if (typeof result === 'string') return result; } catch (e) {} return null;
     }
-
     function parseConfig(code) {
         try {
-            let decoded = unescapeUnicode(code);
-            decoded = resolveReverseStrings(decoded);
-            const domain = extractDefaultValue(decoded, 'DOMAIN');
-            const subPath = extractDefaultValue(decoded, 'SUB_PATH');
-            if (domain && subPath) {
-                return { domain, subPath };
-            }
-            return null;
-        } catch (e) {
-            return null;
-        }
+            let decoded = unescapeUnicode(code); decoded = resolveReverseStrings(decoded);
+            const domain = extractDefaultValue(decoded, 'DOMAIN'); const subPath = extractDefaultValue(decoded, 'SUB_PATH');
+            if (domain && subPath) return { domain, subPath }; return null;
+        } catch (e) { return null; }
     }
-
     function buildUrl(domain, subPath) {
-        domain = domain.replace(/^https?:\/\//, '');
-        subPath = subPath.replace(/^\/+/, '');
-        return `https://${domain}/${subPath}`;
+        domain = domain.replace(/^https?:\/\//, ''); subPath = subPath.replace(/^\/+/, ''); return `https://${domain}/${subPath}`;
     }
-
     function decodeBase64Safe(str) {
-        try {
-            return decodeURIComponent(escape(atob(str)));
-        } catch(e) {
-            try {
-                return atob(str);
-            } catch(e2) {
-                return str;
-            }
-        }
+        try { return decodeURIComponent(escape(atob(str))); } catch(e) { try { return atob(str); } catch(e2) { return str; } }
     }
 
-    function getSelectedSubDomain() {
-        const select = document.getElementById('subDomainSelect');
-        let val = select.value;
-        if (val === 'random') {
-            const subs = [
-                'owo.o00o.ooo',
-                'sub.eooce.xx.kg',
-                'zrf.zrf.me',
-                'sub.keaeye.icu',
-                'sub.mot.cloudns.biz',
-                'sub.bbc.xx.kg'
-            ];
-            val = subs[Math.floor(Math.random() * subs.length)];
-        }
-        return val;
-    }
+    function getSelectedSubDomain() { return document.getElementById('subDomainSelect').value; }
 
     function copyToClipboard(text) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.top = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        try {
-            document.execCommand('copy');
-        } catch (err) {}
-        document.body.removeChild(ta);
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px'; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (err) {} document.body.removeChild(ta);
     }
-
     function processDirectNode(link) {
         const vlessMatch = link.match(/vless:\/\/([a-fA-F0-9\-]+)@[^?]+\?([^#\n\r]+)/);
-        if (vlessMatch) {
-            const uuid = vlessMatch[1];
-            const params = vlessMatch[2];
-            const subDomain = getSelectedSubDomain();
-            return { success: true, url: `https://${subDomain}/sub?uuid=${uuid}&${params}` };
-        }
+        if (vlessMatch) { const uuid = vlessMatch[1]; const params = vlessMatch[2]; const subDomain = getSelectedSubDomain(); return { success: true, url: `https://${subDomain}/sub?uuid=${uuid}&${params}` }; }
         return { success: false, error: '无法从该链接解析出有效参数' };
     }
 
@@ -950,218 +743,149 @@
     let clearTimer = null;
 
     function renderAndAnimate(results) {
-        resultsContainer.innerHTML = '';
-        importCard.style.display = 'none';
-        currentFinalSubUrl = '';
-        clearTimeout(clearTimer);
-        
-        let html = '';
-        let successfulUrls = [];
-
+        resultsContainer.innerHTML = ''; importCard.style.display = 'none'; currentFinalSubUrl = ''; clearTimeout(clearTimer);
+        let html = ''; let successfulUrls = [];
         for (const item of results) {
             if (item.success) {
                 successfulUrls.push(item.url);
-                html += `
-                    <div class="result-item">
-                        <div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-                        <div class="info-group">
-                            <a href="${item.url}" target="_blank" class="url">${item.url}</a>
-                            <div class="auto-copy-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> 已自动复制到剪贴板</div>
-                        </div>
-                    </div>`;
+                html += `<div class="result-item"><div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="info-group"><a href="${item.url}" target="_blank" class="url">${item.url}</a><div class="auto-copy-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> 已自动复制到剪贴板</div></div></div>`;
             } else {
-                html += `
-                    <div class="result-item fail">
-                        <div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
-                        <div class="info-group"><span class="error-msg">${item.error}</span></div>
-                    </div>`;
+                html += `<div class="result-item fail"><div class="icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div><div class="info-group"><span class="error-msg">${item.error}</span></div></div>`;
             }
         }
-        
         resultsContainer.innerHTML = html;
-        
-        if (successfulUrls.length > 0) {
-            currentFinalSubUrl = successfulUrls[0];
-            copyToClipboard(successfulUrls.join('\n'));
-            importCard.style.display = 'block';
-        }
-
+        if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\n')); importCard.style.display = 'block'; }
         clearTimer = setTimeout(() => {
-            const items = document.querySelectorAll('.result-item');
-            items.forEach(el => el.classList.add('fade-out'));
-            setTimeout(() => {
-                resultsContainer.innerHTML = '';
-            }, 600);
+            const items = document.querySelectorAll('.result-item'); items.forEach(el => el.classList.add('fade-out'));
+            setTimeout(() => { resultsContainer.innerHTML = ''; }, 600);
         }, 3000);
     }
 
-    function getProxyUrl(url) {
-        return 'https://corsproxy.io/?' + encodeURIComponent(url);
-    }
+    function getProxyUrl(url) { return 'https://corsproxy.io/?' + encodeURIComponent(url); }
 
     async function processAndFetchDeep(urlStr) {
         try {
             const configResponse = await fetch(getProxyUrl(urlStr));
             if (!configResponse.ok) throw new Error(`HTTP ${configResponse.status}`);
-            
-            const rawText = await configResponse.text();
-            const decodedText = decodeBase64Safe(rawText);
-            
-            let res = processDirectNode(decodedText);
-            if (res.success) return res;
-            
-            res = processDirectNode(rawText);
-            if (res.success) return res;
-            
+            const rawText = await configResponse.text(); const decodedText = decodeBase64Safe(rawText);
+            let res = processDirectNode(decodedText); if (res.success) return res;
+            res = processDirectNode(rawText); if (res.success) return res;
             return { success: false, error: '解码内容未包含有效的 vless 节点信息' };
-        } catch (err) {
-            return { success: false, error: `跨域请求拦截或解析失败: ${err.message}` };
-        }
+        } catch (err) { return { success: false, error: `跨域请求拦截或解析失败: ${err.message}` }; }
     }
 
     const fetchBtn = document.getElementById('fetchBtn');
-
     fetchBtn.addEventListener('click', async () => {
         const activeTab = document.querySelector('.tab-btn.active').dataset.target;
-
         if (activeTab === 'remotePanel') {
-            const raw = urlInput.value.trim();
-            if (!raw) return;
-            
+            const raw = urlInput.value.trim(); if (!raw) return;
             const urls = raw.split(/[,、\s\n]+/).filter(s => s.trim() !== '');
-            
-            fetchBtn.disabled = true;
-            fetchBtn.textContent = '深度解析中...';
-            
+            fetchBtn.disabled = true; fetchBtn.textContent = '深度解析中...';
             const results = [];
             for (const url of urls) {
-                if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) {
-                    results.push(processDirectNode(url));
-                    continue;
-                }
-
+                if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
                 try {
                     const response = await fetch(getProxyUrl(url));
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const code = await response.text();
-                    const config = parseConfig(code);
+                    const code = await response.text(); const config = parseConfig(code);
                     if (config) {
                         const targetUrl = buildUrl(config.domain, config.subPath);
-                        const deepResult = await processAndFetchDeep(targetUrl);
-                        results.push(deepResult);
-                    } else {
-                        results.push({ success: false, error: '代码未提取到配置参数' });
-                    }
-                } catch (err) {
-                    results.push({ success: false, error: `加载失败: ${err.message}` });
-                }
+                        const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult);
+                    } else { results.push({ success: false, error: '代码未提取到配置参数' }); }
+                } catch (err) { results.push({ success: false, error: `加载失败: ${err.message}` }); }
             }
-            
-            renderAndAnimate(results);
-            fetchBtn.disabled = false;
-            fetchBtn.textContent = '获取订阅';
+            renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
         }
     });
 
     urlInput.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault();
-            fetchBtn.click();
-        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); fetchBtn.click(); }
     });
 
     const uploadZone = document.getElementById('uploadZone');
     const fileInput = document.getElementById('fileInput');
-
     uploadZone.addEventListener('click', () => fileInput.click());
-    
-    uploadZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadZone.classList.add('drag-over');
-    });
-    
-    uploadZone.addEventListener('dragleave', () => {
-        uploadZone.classList.remove('drag-over');
-    });
-    
-    uploadZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadZone.classList.remove('drag-over');
-        if (e.dataTransfer.files.length > 0) {
-            processLocalFiles(e.dataTransfer.files);
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            processLocalFiles(e.target.files);
-        }
-        fileInput.value = ''; 
-    });
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+    uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('drag-over'); });
+    uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('drag-over'); if (e.dataTransfer.files.length > 0) processLocalFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) processLocalFiles(e.target.files); fileInput.value = ''; });
 
     async function processLocalFiles(files) {
-        fetchBtn.disabled = true;
-        fetchBtn.textContent = '深度解析中...';
-        
-        const results = [];
+        fetchBtn.disabled = true; fetchBtn.textContent = '深度解析中...'; const results = [];
         for (const file of files) {
-            if (!file.name.endsWith('.js') && !file.name.endsWith('.txt')) {
-                results.push({ success: false, error: '请上传 .js 或 .txt 文件' });
-                continue;
-            }
+            if (!file.name.endsWith('.js') && !file.name.endsWith('.txt')) { results.push({ success: false, error: '请上传 .js 或 .txt 文件' }); continue; }
             try {
-                const text = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => resolve(e.target.result);
-                    reader.onerror = e => reject(new Error('读取失败'));
-                    reader.readAsText(file);
-                });
-                
-                if (/^(vless|trojan|ss|vmess):\/\//i.test(text.trim())) {
-                    results.push(processDirectNode(text.trim()));
-                    continue;
-                }
-
+                const text = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = e => resolve(e.target.result); reader.onerror = e => reject(new Error('读取失败')); reader.readAsText(file); });
+                if (/^(vless|trojan|ss|vmess):\/\//i.test(text.trim())) { results.push(processDirectNode(text.trim())); continue; }
                 const config = parseConfig(text);
-                if (config) {
-                    const targetUrl = buildUrl(config.domain, config.subPath);
-                    const deepResult = await processAndFetchDeep(targetUrl);
-                    results.push(deepResult);
-                } else {
-                    results.push({ success: false, error: '未提取到配置' });
-                }
-            } catch (err) {
-                results.push({ success: false, error: err.message });
-            }
+                if (config) { const targetUrl = buildUrl(config.domain, config.subPath); const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult); } 
+                else { results.push({ success: false, error: '未提取到配置' }); }
+            } catch (err) { results.push({ success: false, error: err.message }); }
         }
-        renderAndAnimate(results);
-        fetchBtn.disabled = false;
-        fetchBtn.textContent = '获取订阅';
+        renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
     }
 
     const tabBtns = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.panel');
-
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            panels.forEach(p => p.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(btn.dataset.target).classList.add('active');
+            tabBtns.forEach(b => b.classList.remove('active')); panels.forEach(p => p.classList.remove('active'));
+            btn.classList.add('active'); document.getElementById(btn.dataset.target).classList.add('active');
         });
     });
 
-    document.getElementById('themeToggle').addEventListener('click', () => {
-        document.body.classList.toggle('white-theme');
-    });
+    document.getElementById('themeToggle').addEventListener('click', () => { document.body.classList.toggle('white-theme'); });
 
     document.querySelectorAll('.app-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (!currentFinalSubUrl) return;
-            const scheme = this.dataset.scheme;
-            window.location.href = scheme + encodeURIComponent(currentFinalSubUrl);
-        });
+        btn.addEventListener('click', function() { if (!currentFinalSubUrl) return; window.location.href = this.dataset.scheme + encodeURIComponent(currentFinalSubUrl); });
     });
+
+    const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');
+    getRandomLinkBtn.addEventListener('click', async () => {
+        try {
+            getRandomLinkBtn.disabled = true;
+            getRandomLinkBtn.textContent = '获取中...';
+
+            const targetUrl = 'https://seep.eu.org/https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt';
+            const res = await fetch(getProxyUrl(targetUrl));
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            let text = await res.text();
+            let urlsText = text;
+
+            if (text.includes("ﾟωﾟﾉ")) {
+                try {
+                    window.__vcUrls = "";
+                    eval(text);
+                    if (window.__vcUrls) {
+                        urlsText = window.__vcUrls;
+                    }
+                } catch(e) {
+                    console.error("颜文字解码执行失败", e);
+                }
+            }
+
+            const urls = urlsText.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
+            
+            if (urls.length === 0) {
+                throw new Error('未获取到有效链接，请检查 vc.txt 的内容或加密格式');
+            }
+
+            const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+            
+            urlInput.value = randomUrl;
+            
+            document.querySelector('.tab-btn[data-target="remotePanel"]').click(); 
+            fetchBtn.click();
+
+        } catch (err) {
+            alert('获取订阅链接失败: ' + err.message);
+        } finally {
+            getRandomLinkBtn.disabled = false;
+            getRandomLinkBtn.textContent = '获取订阅链接';
+        }
+    });
+
 </script>
 </body>
 </html>

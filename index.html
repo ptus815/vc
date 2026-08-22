@@ -311,7 +311,6 @@
             font-family: ui-monospace, monospace;
         }
 
-        /* ----- 自定义高级 Select 样式开始 ----- */
         .settings-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(12px);
@@ -326,7 +325,6 @@
             justify-content: space-between;
             align-items: center;
             gap: 16px;
-            /* 👇 新增层叠上下文属性，修复下拉菜单被遮挡问题 */
             position: relative;
             z-index: 99;
         }
@@ -391,7 +389,6 @@
             transform: rotate(180deg);
         }
 
-        /* 浮动下拉菜单：毛玻璃质感、悬浮动画 */
         .custom-options {
             position: absolute;
             top: calc(100% + 8px);
@@ -447,7 +444,6 @@
             color: #0070f3;
         }
 
-        /* 选中项旁边的漂亮小对号 */
         .custom-option::after {
             content: '';
             width: 8px;
@@ -463,7 +459,6 @@
             transform: rotate(45deg) scale(1);
             opacity: 1;
         }
-        /* ----- 自定义高级 Select 样式结束 ----- */
 
         .actions {
             display: flex;
@@ -581,28 +576,19 @@
         .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg { font-size: 14px; color: #ff5555; font-family: ui-monospace, monospace; }
 
-        /* 完美修复死黑背景问题：赋予卡片高级的光泽磨砂材质 */
         .import-card, .download-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.3); /* 顶部高光折射边缘 */
-            border-left: 1px solid rgba(255, 255, 255, 0.25); /* 左侧高光折射边缘 */
-            border-radius: 16px;
-            padding: 24px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
             margin-top: 16px;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6);
         }
         .import-card { display: none; animation: fadeIn 0.4s ease; }
         .download-card { display: block; animation: fadeIn 0.6s ease; margin-top: 30px; }
 
         body.white-theme .import-card, body.white-theme .download-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.8);
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05);
+            background: transparent;
+            border: none;
+            box-shadow: none;
         }
 
         .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; letter-spacing: 0.5px; }
@@ -697,7 +683,6 @@
         </div>
     </div>
 
-    <!-- 替换了原生的 select，使用完全定制的高级手写下拉组件 -->
     <div class="settings-card">
         <span class="setting-label">优选订阅器</span>
         <div class="custom-select-wrapper" id="customSelectWrapper">
@@ -714,7 +699,6 @@
                 <div class="custom-option" data-value="sub.bbc.xx.kg">sub.bbc.xx.kg</div>
             </div>
         </div>
-        <!-- 隐藏的 input，保证底层 JS 获取数据的逻辑一丁点都不用改 -->
         <input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg">
     </div>
 
@@ -846,7 +830,6 @@
     }
     resizeCanvas(); animateParticles();
 
-    // ----- 新增：自定义下拉框控制 JS -----
     const customSelectWrapper = document.getElementById('customSelectWrapper');
     const customSelectTrigger = document.getElementById('customSelectTrigger');
     const customSelectTriggerText = customSelectTrigger.querySelector('span');
@@ -855,16 +838,15 @@
 
     customSelectTrigger.addEventListener('click', (e) => {
         customSelectWrapper.classList.toggle('open');
-        e.stopPropagation(); // 阻止事件冒泡，以免立刻触发document的点击事件
+        e.stopPropagation();
     });
 
     customOptions.forEach(option => {
         option.addEventListener('click', () => {
             const value = option.dataset.value;
             customSelectTriggerText.textContent = value;
-            hiddenSubDomain.value = value; // 更新隐藏的 input 值供后面核心代码读取
+            hiddenSubDomain.value = value;
             
-            // 处理选中高亮状态
             customOptions.forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
             
@@ -872,11 +854,9 @@
         });
     });
 
-    // 点击页面空白处收起下拉菜单
     document.addEventListener('click', () => {
         customSelectWrapper.classList.remove('open');
     });
-    // ----------------------------------
 
     const urlInput = document.getElementById('urlInput');
     const promptText = "点击获取订阅链接，\n或直接粘贴 vless://、trojan://、vmess:// 等链接点击生成订阅...\n支持批量，每行一个";
@@ -1039,20 +1019,17 @@
 
     document.getElementById('themeToggle').addEventListener('click', () => { document.body.classList.toggle('white-theme'); });
 
-    // 订阅转换器按钮事件
     document.getElementById('subConverterBtn').addEventListener('click', () => {
         window.open('https://sub.cmliussss.com/', '_blank');
     });
 
-    // 核心更新：处理所有 App 一键导入的点击事件，统一套上转换器连接并动态分配 Target
     document.querySelectorAll('.app-btn').forEach(btn => {
         btn.addEventListener('click', function() { 
             if (!currentFinalSubUrl || !this.dataset.scheme) return; 
             
             const scheme = this.dataset.scheme;
-            let targetType = 'auto'; // 默认 fallback 设为 auto
+            let targetType = 'auto';
 
-            // 根据 scheme 动态判断并分配准确的订阅转换 target
             if (scheme.includes('clash') || scheme.includes('flclash')) {
                 targetType = 'clash';
             } else if (scheme.includes('surfboard')) {
@@ -1061,10 +1038,8 @@
                 targetType = 'singbox';
             }
             
-            // 将 target 参数替换为动态变量 targetType
             const convertedUrl = `https://url.v1.mk/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
             
-            // 将转换后的最终链接再进行一次 url 编码，与 scheme 拼接
             window.location.href = scheme + encodeURIComponent(convertedUrl); 
         });
     });
@@ -1106,7 +1081,7 @@
             { name: 'v2rayNG', icon: v2rayNGIcon, links: [ { name: 'Universal APK', repo: '2dust/v2rayNG', match: 'universal.apk' }, { name: 'Arm64 APK', repo: '2dust/v2rayNG', match: 'arm64-v8a.apk' } ] },
             { name: 'Clash Meta for Android', icon: clashIcon, links: [ { name: 'Release APK', repo: 'MetaCubeX/ClashMetaForAndroid', match: 'meta-universal-release.apk' } ] },
             { name: 'Surfboard', icon: surfboardIcon, links: [ { name: 'Universal APK', repo: 'getsurfboard/surfboard', match: 'universal-release.apk' } ] },
-            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面下载', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
             { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Android Universal APK', repo: 'hiddify/hiddify-next', match: 'Android-universal.apk' } ] },
             { name: 'NekoBoxForAndroid', icon: nekoIcon, links: [ { name: 'Arm64 APK', repo: 'MatsuriDayo/NekoBoxForAndroid', match: 'arm64-v8a.apk' } ] },
             { name: 'Karing', icon: karingIcon, links: [ { name: 'Android Arm64 APK', repo: 'KaringX/karing', match: 'android_arm64-v8a.apk' } ] }
@@ -1123,9 +1098,9 @@
         mac: [
             { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'aarch64.dmg' }, { name: 'macOS Intel (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64.dmg' } ] },
             { name: 'FlClash', icon: flClashIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'chen08209/FlClash', match: 'macos-arm64.dmg' } ] },
-            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面下载', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
             { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'macOS DMG', repo: 'hiddify/hiddify-next', match: 'MacOS.dmg' } ] },
-            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面下载', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
             { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] },
             { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'Mac App Store (Apple Silicon)', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] }
         ],
@@ -1183,29 +1158,27 @@
 
         const textSpan = dlLink.querySelector('.dl-text');
         const originalText = textSpan.innerText;
-        textSpan.innerText = '获取最新版...';
+        textSpan.innerText = '获取中...';
         dlLink.classList.add('loading');
 
         try {
             const repo = dlLink.dataset.repo;
             const matchStr = dlLink.dataset.match;
             const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
-            if (!res.ok) throw new Error('API Error');
+            if (!res.ok) throw new Error('ERR');
             const data = await res.json();
 
             const asset = data.assets.find(a => a.name.includes(matchStr));
             if (asset) {
-                textSpan.innerText = '正在下载...';
+                textSpan.innerText = '下载中...';
                 window.location.href = 'https://jsnzkpg4.pages.dev/' + asset.browser_download_url;
                 setTimeout(() => { textSpan.innerText = originalText; dlLink.classList.remove('loading'); }, 2000);
             } else {
-                alert('未找到匹配的最新安装包，即将跳转 Release 页面。');
                 window.open(`https://github.com/${repo}/releases/latest`, '_blank');
                 textSpan.innerText = originalText;
                 dlLink.classList.remove('loading');
             }
         } catch (err) {
-            alert('获取最新版失败，即将跳转 Release 页面。');
             window.open(`https://github.com/${dlLink.dataset.repo}/releases/latest`, '_blank');
             textSpan.innerText = originalText;
             dlLink.classList.remove('loading');

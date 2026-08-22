@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
     'textarea { width: 100%; padding: 22px 24px; font-size: 15px; font-family: ui-monospace, Consolas, monospace; border-radius: 16px; resize: vertical; min-height: 320px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3); border-left: 1px solid rgba(255, 255, 255, 0.25); color: #eaeaea; outline: none; transition: all 0.3s; box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6); } ' +
     'textarea::placeholder { color: rgba(255, 255, 255, 0.4); line-height: 1.8; } ' +
     'textarea:focus { border-color: #3291ff; background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.1), 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.8); } ' +
-    'body.white-theme textarea { background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%); border: 1px solid rgba(255, 255, 255, 0.6); border-top: 1px solid rgba(255, 255, 255, 0.8); border-left: 1px solid rgba(255, 255, 255, 0.5); color: #111111; box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05); } ' +
+    'body.white-theme textarea { background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%); border: 1px solid rgba(0, 0, 0, 0.1); border-top: 1px solid rgba(0, 0, 0, 0.15); border-left: 1px solid rgba(0, 0, 0, 0.1); color: #111111; box-shadow: inset 0 0 20px rgba(0,0,0,0.02), 0 10px 30px -10px rgba(0,0,0,0.05); } ' +
     'body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); } ' +
-    'body.white-theme textarea:focus { border-color: #0070f3; background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15); } ' +
+    'body.white-theme textarea:focus { border-color: #0070f3; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15); } ' +
     '.settings-card { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 14px 18px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center; gap: 16px; position: relative; z-index: 99; } ' +
     'body.white-theme .settings-card { background: rgba(255, 255, 255, 0.65); border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0,0,0,0.05); } ' +
     '.setting-label { font-size: 14px; font-weight: 500; color: #eaeaea; white-space: nowrap; flex-shrink: 0; } ' +
@@ -419,6 +419,27 @@ document.addEventListener('DOMContentLoaded', function() {
         window.open('https://sub.cmliussss.com/', '_blank');
     });
 
+    document.querySelectorAll('.app-btn[data-scheme]').forEach(btn => {
+        btn.addEventListener('click', function() { 
+            if (!currentFinalSubUrl || !this.dataset.scheme) return; 
+            
+            const scheme = this.dataset.scheme;
+            let targetType = 'auto';
+
+            if (scheme.includes('clash') || scheme.includes('flclash')) {
+                targetType = 'clash';
+            } else if (scheme.includes('surfboard')) {
+                targetType = 'surfboard';
+            } else if (scheme.includes('sing-box')) {
+                targetType = 'singbox';
+            }
+            
+            const convertedUrl = 'https://url.v1.mk/sub?target=' + targetType + '&url=' + encodeURIComponent(currentFinalSubUrl) + '&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false';
+            
+            window.location.href = scheme + encodeURIComponent(convertedUrl); 
+        });
+    });
+
     const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');
     getRandomLinkBtn.addEventListener('click', async () => {
         try {
@@ -557,27 +578,6 @@ document.addEventListener('DOMContentLoaded', function() {
             textSpan.innerText = originalText;
             dlLink.classList.remove('loading');
         }
-    });
-
-    document.querySelectorAll('.app-btn[data-scheme]').forEach(btn => {
-        btn.addEventListener('click', function() { 
-            if (!currentFinalSubUrl || !this.dataset.scheme) return; 
-            
-            const scheme = this.dataset.scheme;
-            let targetType = 'auto';
-
-            if (scheme.includes('clash') || scheme.includes('flclash')) {
-                targetType = 'clash';
-            } else if (scheme.includes('surfboard')) {
-                targetType = 'surfboard';
-            } else if (scheme.includes('sing-box')) {
-                targetType = 'singbox';
-            }
-            
-            const convertedUrl = 'https://url.v1.mk/sub?target=' + targetType + '&url=' + encodeURIComponent(currentFinalSubUrl) + '&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false';
-            
-            window.location.href = scheme + encodeURIComponent(convertedUrl); 
-        });
     });
 
     osTabs.forEach(tab => {

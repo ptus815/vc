@@ -243,7 +243,7 @@
             transition: all 0.3s;
             user-select: none;
         }
-        
+
         body.white-theme .custom-select-trigger {
             background: rgba(255, 255, 255, 0.8);
             color: #111111;
@@ -253,7 +253,7 @@
         .custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger {
             border-color: #3291ff;
         }
-        
+
         body.white-theme .custom-select-trigger:hover, body.white-theme .custom-select-wrapper.open .custom-select-trigger {
             border-color: #0070f3;
         }
@@ -475,7 +475,7 @@
         body.white-theme .app-btn { background: rgba(255, 255, 255, 0.4); border-color: rgba(0, 0, 0, 0.1); color: #111111; }
         .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(50, 145, 255, 0.15); }
         body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; box-shadow: 0 4px 12px rgba(0, 112, 243, 0.1); }
-        
+
         .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
 
@@ -545,6 +545,7 @@
             <div class="custom-options">
                 <div class="custom-option selected" data-value="sub.eooce.xx.kg">sub.eooce.xx.kg</div>
                 <div class="custom-option" data-value="owo.o00o.ooo">owo.o00o.ooo</div>
+                <div class="custom-option" data-value="sub.lzjbaby.com">sub.lzjbaby.com</div>
                 <div class="custom-option" data-value="zrf.zrf.me">zrf.zrf.me</div>
                 <div class="custom-option" data-value="sub.keaeye.icu">sub.keaeye.icu</div>
                 <div class="custom-option" data-value="sub.mot.cloudns.biz">sub.mot.cloudns.biz</div>
@@ -698,10 +699,10 @@
             const value = option.dataset.value;
             customSelectTriggerText.textContent = value;
             hiddenSubDomain.value = value;
-            
+
             customOptions.forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
-            
+
             customSelectWrapper.classList.remove('open');
         });
     });
@@ -843,7 +844,7 @@
     document.querySelectorAll('.app-btn').forEach(btn => {
         btn.addEventListener('click', function() { 
             if (!currentFinalSubUrl || !this.dataset.scheme) return; 
-            
+
             const scheme = this.dataset.scheme;
             let targetType = 'auto';
 
@@ -854,9 +855,9 @@
             } else if (scheme.includes('sing-box')) {
                 targetType = 'singbox';
             }
-            
+
             const convertedUrl = `https://url.v1.mk/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
-            
+
             window.location.href = scheme + encodeURIComponent(convertedUrl); 
         });
     });

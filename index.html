@@ -897,16 +897,28 @@
         window.open('https://sub.cmliussss.com/', '_blank');
     });
 
-    // 核心更新：处理所有 App 一键导入的点击事件，统一套上转换器连接
+    // 核心更新：处理所有 App 一键导入的点击事件，统一套上转换器连接并动态分配 Target
     document.querySelectorAll('.app-btn').forEach(btn => {
         btn.addEventListener('click', function() { 
             if (!currentFinalSubUrl || !this.dataset.scheme) return; 
             
-            // 将原始的订阅链接通过转换器进行套壳
-            const convertedUrl = `https://url.v1.mk/sub?target=auto&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
+            const scheme = this.dataset.scheme;
+            let targetType = 'auto'; // 默认 fallback 设为 auto
+
+            // 根据 scheme 动态判断并分配准确的订阅转换 target
+            if (scheme.includes('clash') || scheme.includes('flclash')) {
+                targetType = 'clash';
+            } else if (scheme.includes('surfboard')) {
+                targetType = 'surfboard';
+            } else if (scheme.includes('sing-box')) {
+                targetType = 'singbox';
+            }
+            
+            // 将 target 参数替换为动态变量 targetType
+            const convertedUrl = `https://url.v1.mk/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
             
             // 将转换后的最终链接再进行一次 url 编码，与 scheme 拼接
-            window.location.href = this.dataset.scheme + encodeURIComponent(convertedUrl); 
+            window.location.href = scheme + encodeURIComponent(convertedUrl); 
         });
     });
 

@@ -138,6 +138,47 @@ document.addEventListener('DOMContentLoaded', function() {
     '<button class="btn" id="fetchBtn">生成订阅</button>' +
     '</div>' +
     '<div class="results" id="resultsContainer"></div>' +
+    '<div class="import-card" id="importCard">' +
+    '<div class="import-header">一键导入订阅至 App</div>' +
+    '<div class="app-list">' +
+    '<button class="app-btn" data-scheme="shadowrocket://add/">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">' +
+    '<span class="app-name">导入到 Shadowrocket</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="v2rayng://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/v2rayNG.svg" alt="v2rayNG">' +
+    '<span class="app-name">导入到 v2rayNG</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="clash://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashMetaforAndroid.svg" alt="Clash Meta">' +
+    '<span class="app-name">导入到 Clash Meta</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="flclash://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Flclash.svg" alt="FlClash">' +
+    '<span class="app-name">导入到 FlClash</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="surfboard:///install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Surfboard.svg" alt="Surfboard">' +
+    '<span class="app-name">导入到 Surfboard</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="sing-box://import-remote-profile?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/singbox.svg" alt="Sing-box">' +
+    '<span class="app-name">导入到 Sing-box</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="hiddify://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">' +
+    '<span class="app-name">导入到 Hiddify</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="nekobox://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">' +
+    '<span class="app-name">导入到 NekoBox</span>' +
+    '</button>' +
+    '<button class="app-btn" data-scheme="karing://install-config?url=">' +
+    '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">' +
+    '<span class="app-name">导入到 Karing</span>' +
+    '</button>' +
+    '</div>' +
+    '</div>' +
     '<div class="download-card" id="downloadCard">' +
     '<div class="import-header">客户端下载</div>' +
     '<div class="os-tabs" id="osTabs">' +
@@ -304,10 +345,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const resultsContainer = document.getElementById('resultsContainer');
+    const importCard = document.getElementById('importCard');
     let clearTimer = null;
 
     function renderAndAnimate(results) {
-        resultsContainer.innerHTML = ''; currentFinalSubUrl = ''; clearTimeout(clearTimer);
+        resultsContainer.innerHTML = ''; importCard.style.display = 'none'; currentFinalSubUrl = ''; clearTimeout(clearTimer);
         let html = ''; let successfulUrls = [];
         for (const item of results) {
             if (item.success) {
@@ -318,7 +360,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         resultsContainer.innerHTML = html;
-        if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\n')); }
+        if (successfulUrls.length > 0) { 
+            currentFinalSubUrl = successfulUrls[0]; 
+            copyToClipboard(successfulUrls.join('\n')); 
+            importCard.style.display = 'block'; 
+        }
         clearTimer = setTimeout(() => {
             const items = document.querySelectorAll('.result-item'); items.forEach(el => el.classList.add('fade-out'));
             setTimeout(() => { resultsContainer.innerHTML = ''; }, 600);
@@ -401,6 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const hiddifyIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">';
     const nekoIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">';
     const karingIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">';
+    const shadowrocketIcon = '<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">';
 
     const dlData = {
         android: [
@@ -428,12 +475,14 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
             { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'macOS DMG', repo: 'hiddify/hiddify-next', match: 'MacOS.dmg' } ] },
             { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
-            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] }
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] },
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'Mac App Store (Apple Silicon)', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] }
         ],
         ios: [
-            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/sing-box/id6451299863' } ] },
-            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777032' } ] },
-            { name: 'Karing', icon: karingIcon, links: [ { name: 'App Store', url: 'https://apps.apple.com/us/app/karing/id6471343750' } ] }
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/sing-box/id6451299863' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777032' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/karing/id6471343750' } ] }
         ],
         linux: [
             { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'Linux amd64 Deb', repo: 'clash-verge-rev/clash-verge-rev', match: 'amd64.deb' } ] },
@@ -483,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const textSpan = dlLink.querySelector('.dl-text');
         const originalText = textSpan.innerText;
-        textSpan.innerText = '...';
+        textSpan.innerText = '获取中...';
         dlLink.classList.add('loading');
 
         try {
@@ -495,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const asset = data.assets.find(a => a.name.includes(matchStr));
             if (asset) {
-                textSpan.innerText = '...';
+                textSpan.innerText = '下载中...';
                 window.location.href = 'https://jsnzkpg4.pages.dev/' + asset.browser_download_url;
                 setTimeout(() => { textSpan.innerText = originalText; dlLink.classList.remove('loading'); }, 2000);
             } else {
@@ -508,6 +557,27 @@ document.addEventListener('DOMContentLoaded', function() {
             textSpan.innerText = originalText;
             dlLink.classList.remove('loading');
         }
+    });
+
+    document.querySelectorAll('.app-btn[data-scheme]').forEach(btn => {
+        btn.addEventListener('click', function() { 
+            if (!currentFinalSubUrl || !this.dataset.scheme) return; 
+            
+            const scheme = this.dataset.scheme;
+            let targetType = 'auto';
+
+            if (scheme.includes('clash') || scheme.includes('flclash')) {
+                targetType = 'clash';
+            } else if (scheme.includes('surfboard')) {
+                targetType = 'surfboard';
+            } else if (scheme.includes('sing-box')) {
+                targetType = 'singbox';
+            }
+            
+            const convertedUrl = 'https://url.v1.mk/sub?target=' + targetType + '&url=' + encodeURIComponent(currentFinalSubUrl) + '&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false';
+            
+            window.location.href = scheme + encodeURIComponent(convertedUrl); 
+        });
     });
 
     osTabs.forEach(tab => {

@@ -10,7 +10,7 @@
             --mouse-x: 50vw; --mouse-y: 50vh;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
-            padding: 8vh 20px 40px 20px; transition: background 0.4s ease, color 0.4s ease;
+            padding: 6vh 20px 60px 20px; transition: background 0.4s ease, color 0.4s ease;
             background: #000000; color: #eaeaea; overflow-x: hidden;
         }
         @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
@@ -44,7 +44,7 @@
         
         textarea {
             width: 100%; padding: 22px 24px; font-size: 15px; font-family: ui-monospace, Consolas, monospace;
-            border-radius: 16px; resize: vertical; min-height: 320px;
+            border-radius: 16px; resize: vertical; min-height: 300px;
             background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
             color: #eaeaea; outline: none; transition: all 0.3s;
         }
@@ -56,7 +56,7 @@
 
         .settings-card {
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 14px 18px; margin: 24px 0;
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 14px 18px; margin: 20px 0;
             display: flex; justify-content: space-between; align-items: center; gap: 16px; position: relative; z-index: 99;
         }
         body.white-theme .settings-card { background: rgba(255, 255, 255, 0.65); border-color: rgba(255, 255, 255, 0.6); }
@@ -86,7 +86,8 @@
         }
         body.white-theme .custom-option { color: #333; }
         .custom-option:hover, .custom-option.selected { background: rgba(50, 145, 255, 0.15); color: #3291ff; }
-        .actions { display: flex; justify-content: flex-end; margin-bottom: 30px; gap: 16px; flex-wrap: wrap; }
+        
+        .actions { display: flex; justify-content: flex-end; margin-bottom: 20px; gap: 16px; flex-wrap: wrap; }
         .btn {
             background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 40px; border: none;
             cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s;
@@ -97,6 +98,7 @@
         body.white-theme .btn { background: #000000; color: #ffffff; }
         #getRandomLinkBtn { background: #3291ff; color: #ffffff; }
         body.white-theme #getRandomLinkBtn { background: #0070f3; }
+        
         .results { display: flex; flex-direction: column; gap: 16px; }
         .result-item {
             display: flex; align-items: center; padding: 18px 24px; border-radius: 12px; background: rgba(0, 0, 0, 0.7);
@@ -115,9 +117,7 @@
         .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg { font-size: 14px; color: #ff5555; }
         
-        .import-card, .download-card { background: transparent; border: none; margin-top: 16px; }
-        .import-card { display: none; }
-        .download-card { display: block; margin-top: 30px; }
+        .import-card { background: transparent; border: none; margin-top: 16px; display: none; }
         .import-header { text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #eaeaea; }
         body.white-theme .import-header { color: #111111; }
         .app-list { display: flex; flex-direction: column; gap: 12px; }
@@ -131,6 +131,15 @@
         body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; }
         .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
+        
+        /* 调整后的客户端下载区块：间距下移，首屏不漏出 */
+        .download-card {
+            background: transparent;
+            border: none;
+            display: block;
+            margin-top: 80px; 
+            padding-bottom: 20px;
+        }
         
         .os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .os-tabs::-webkit-scrollbar { display: none; }
@@ -170,7 +179,9 @@
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </div>
     </div>
+    
     <textarea id="urlInput" placeholder=""></textarea>
+    
     <div class="settings-card">
         <span class="setting-label">优选订阅器</span>
         <div class="custom-select-wrapper" id="customSelectWrapper">
@@ -189,12 +200,15 @@
         </div>
         <input type="hidden" id="subDomainSelect" value="sub.eooce.xx.kg">
     </div>
+    
     <div class="actions">
         <button class="btn" id="subConverterBtn">订阅转换器</button>
         <button class="btn" id="getRandomLinkBtn">获取订阅链接</button>
         <button class="btn" id="fetchBtn">生成订阅</button>
     </div>
+    
     <div class="results" id="resultsContainer"></div>
+    
     <div class="import-card" id="importCard">
         <div class="import-header">一键导入订阅至 App</div>
         <div class="app-list">
@@ -209,8 +223,8 @@
             <button class="app-btn" data-scheme="karing://install-config?url="><img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg"><span class="app-name">导入到 Karing</span></button>
         </div>
     </div>
+    
     <div class="download-card" id="downloadCard">
-        <div class="import-header">客户端下载</div>
         <div class="os-tabs" id="osTabs">
             <button class="os-tab active" data-os="android" title="Android"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.52 15.34c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m-11.04 0c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m11.4-6.02l1.99-3.45a.41.41 0 00-.56-.15l-2.02 3.5A13.06 13.06 0 0012 7.8c-1.85 0-3.59.45-5.13 1.15l-2.02-3.5a.41.41 0 00-.56.15.41.41 0 00.15.56l1.99 3.45C2.68 11.18.34 14.65 0 18.76h24c-.34-4.11-2.68-7.58-6.11-9.44z"/></svg></button>
             <button class="os-tab" data-os="windows" title="Windows"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M0 3.45L9.75 2.1v9.45H0m10.95-9.6l13.05-1.8v11.4H10.95M0 12.6h9.75v9.45L0 20.7M10.95 12.6H24V24l-12.95-1.8"/></svg></button>

@@ -14,7 +14,6 @@
 
 ### 🌟 特性
 
-* **后端服务化**：核心解析与解密逻辑全部在服务端运行，安全无跨域问题。
 * **多协议支持**：支持 `vless` / `trojan` / `vmess` / `ss` / `hysteria2` 等常用协议解析。
 * **一键导入客户端**：支持 Shadowrocket、v2rayNG、Clash Meta、FlClash、Sing-box 等多平台客户端订阅快速导入与下载。
 * **Cloudflare CDN 加速**：支持绑定自定义域名并开启小黄云（Proxied）进行国内直连加速。

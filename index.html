@@ -114,6 +114,7 @@
         .result-item.fail::before { background: #ff3333; }
         .result-item.fail .icon-box { color: #ff3333; }
         .result-item.fail .error-msg { font-size: 14px; color: #ff5555; }
+        
         .import-card, .download-card { background: transparent; border: none; margin-top: 16px; }
         .import-card { display: none; }
         .download-card { display: block; margin-top: 30px; }
@@ -121,24 +122,39 @@
         body.white-theme .import-header { color: #111111; }
         .app-list { display: flex; flex-direction: column; gap: 12px; }
         .app-btn {
-            width: 100%; display: flex; align-items: center; padding: 14px 20px; border-radius: 12px;
+            width: 100%; display: flex; align-items: center; justify-content: flex-start; padding: 14px 20px; border-radius: 12px;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;
-            transition: all 0.25s; color: #eaeaea; outline: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); color: #eaeaea; outline: none; -webkit-tap-highlight-color: transparent;
         }
         body.white-theme .app-btn { background: rgba(255, 255, 255, 0.4); border-color: rgba(0, 0, 0, 0.1); color: #111111; }
-        .app-btn:hover { border-color: #3291ff; color: #3291ff; transform: translateY(-2px); }
-        .app-icon { width: 24px; height: 24px; flex-shrink: 0; object-fit: contain; }
+        .app-btn:hover { border-color: #3291ff; background: rgba(50, 145, 255, 0.08); color: #3291ff; transform: translateY(-2px); }
+        body.white-theme .app-btn:hover { border-color: #0070f3; background: rgba(0, 112, 243, 0.08); color: #0070f3; }
+        .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
-        .os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
-        .os-tab { padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #eaeaea; cursor: pointer; }
-        .os-tab.active { background: #3291ff; color: #fff; }
-        body.white-theme .os-tab { background: rgba(255,255,255,0.6); color: #111; }
-        body.white-theme .os-tab.active { background: #0070f3; color: #fff; }
+        
+        .os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .os-tabs::-webkit-scrollbar { display: none; }
+        .os-tab {
+            padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #eaeaea; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: all 0.3s;
+        }
+        .os-tab.active { background: #3291ff; color: #fff; border-color: #3291ff; }
+        body.white-theme .os-tab { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); color: #111; }
+        body.white-theme .os-tab.active { background: #0070f3; color: #fff; border-color: #0070f3; }
+        
         .dl-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        .dl-chevron { width: 18px; height: 18px; opacity: 0.6; }
+        .dl-chevron { width: 18px; height: 18px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
         .dl-links { display: none; flex-direction: column; gap: 8px; padding: 4px 8px 8px 46px; }
-        .dl-links.open { display: flex; }
-        .dl-link { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #3291ff; text-decoration: none; font-size: 13px; }
+        .dl-links.open { display: flex; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .dl-link {
+            display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #3291ff; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s;
+        }
+        .dl-link:hover { background: rgba(50,145,255,0.1); border-color: rgba(50,145,255,0.3); transform: translateX(2px); }
+        body.white-theme .dl-link { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.08); color: #0070f3; }
+        body.white-theme .dl-link:hover { background: rgba(0,112,243,0.08); border-color: rgba(0,112,243,0.3); }
+        .dl-link-icon { width: 16px; height: 16px; }
     </style>
 </head>
 <body class="white-theme">
@@ -196,11 +212,11 @@
     <div class="download-card" id="downloadCard">
         <div class="import-header">客户端下载</div>
         <div class="os-tabs" id="osTabs">
-            <button class="os-tab active" data-os="android">Android</button>
-            <button class="os-tab" data-os="windows">Windows</button>
-            <button class="os-tab" data-os="mac">macOS</button>
-            <button class="os-tab" data-os="ios">iOS</button>
-            <button class="os-tab" data-os="linux">Linux</button>
+            <button class="os-tab active" data-os="android" title="Android"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.52 15.34c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m-11.04 0c-.55 0-.99-.44-.99-.99s.44-.99.99-.99c.55 0 .99.44.99.99 0 .55-.44.99-.99.99m11.4-6.02l1.99-3.45a.41.41 0 00-.56-.15l-2.02 3.5A13.06 13.06 0 0012 7.8c-1.85 0-3.59.45-5.13 1.15l-2.02-3.5a.41.41 0 00-.56.15.41.41 0 00.15.56l1.99 3.45C2.68 11.18.34 14.65 0 18.76h24c-.34-4.11-2.68-7.58-6.11-9.44z"/></svg></button>
+            <button class="os-tab" data-os="windows" title="Windows"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M0 3.45L9.75 2.1v9.45H0m10.95-9.6l13.05-1.8v11.4H10.95M0 12.6h9.75v9.45L0 20.7M10.95 12.6H24V24l-12.95-1.8"/></svg></button>
+            <button class="os-tab" data-os="mac" title="macOS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button>
+            <button class="os-tab" data-os="ios" title="iOS"><span style="font-weight: bold; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">iOS</span></button>
+            <button class="os-tab" data-os="linux" title="Linux"><img src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Linux.svg" width="20" height="20" style="object-fit: contain;"></button>
         </div>
         <div class="app-grid" id="dlGrid"></div>
     </div>
@@ -347,27 +363,128 @@
         });
     });
 
+    const v2rayNGIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/v2rayNG.svg" alt="v2rayNG">`;
+    const clashIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashMetaforAndroid.svg" alt="Clash Meta">`;
+    const clashVergeIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/ClashVergeRev.svg" alt="Clash Verge">`;
+    const flClashIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Flclash.svg" alt="FlClash">`;
+    const surfboardIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Surfboard.svg" alt="Surfboard">`;
+    const singboxIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/singbox.svg" alt="Sing-box">`;
+    const hiddifyIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Hiddify.svg" alt="Hiddify">`;
+    const nekoIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/NekoBoxForAndroid.svg" alt="NekoBox">`;
+    const karingIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Karing.svg" alt="Karing">`;
+    const shadowrocketIcon = `<img class="app-icon" src="https://raw.githubusercontent.com/ptus815/vc/main/icon/Shadowrocket.svg" alt="Shadowrocket">`;
+
     const dlData = {
         android: [
-            { name: 'FlClash', repo: 'chen08209/FlClash', match: 'android-arm64-v8a.apk' },
-            { name: 'v2rayNG', repo: '2dust/v2rayNG', match: 'universal.apk' }
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Android Universal APK', repo: 'chen08209/FlClash', match: 'android-arm64-v8a.apk' } ] },
+            { name: 'v2rayNG', icon: v2rayNGIcon, links: [ { name: 'Universal APK', repo: '2dust/v2rayNG', match: 'universal.apk' }, { name: 'Arm64 APK', repo: '2dust/v2rayNG', match: 'arm64-v8a.apk' } ] },
+            { name: 'Clash Meta for Android', icon: clashIcon, links: [ { name: 'Release APK', repo: 'MetaCubeX/ClashMetaForAndroid', match: 'meta-universal-release.apk' } ] },
+            { name: 'Surfboard', icon: surfboardIcon, links: [ { name: 'Universal APK', repo: 'getsurfboard/surfboard', match: 'universal-release.apk' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Android Universal APK', repo: 'hiddify/hiddify-next', match: 'Android-universal.apk' } ] },
+            { name: 'NekoBoxForAndroid', icon: nekoIcon, links: [ { name: 'Arm64 APK', repo: 'MatsuriDayo/NekoBoxForAndroid', match: 'arm64-v8a.apk' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Android Arm64 APK', repo: 'KaringX/karing', match: 'android_arm64-v8a.apk' } ] }
         ],
         windows: [
-            { name: 'Clash Verge Rev', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64-setup.exe' },
-            { name: 'FlClash', repo: 'chen08209/FlClash', match: 'windows-amd64-setup.exe' }
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'Windows Setup (x64)', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64-setup.exe' }, { name: 'Windows Portable', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64.app.tar.gz' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Windows Setup (x64)', repo: 'chen08209/FlClash', match: 'windows-amd64-setup.exe' } ] },
+            { name: 'v2rayN', icon: v2rayNGIcon, links: [ { name: 'Windows Desktop (Zip)', repo: '2dust/v2rayN', match: 'windows-64-desktop.zip' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Windows (amd64)', repo: 'SagerNet/sing-box', match: 'windows-amd64.zip' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Windows Setup', repo: 'hiddify/hiddify-next', match: 'Windows-Setup-x64.exe' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Windows (Zip)', repo: 'MatsuriDayo/nekoray', match: 'windows64.zip' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Windows Setup', repo: 'KaringX/karing', match: 'windows_x64.exe' } ] }
         ],
-        mac: [{ name: 'Clash Verge Rev', repo: 'clash-verge-rev/clash-verge-rev', match: 'aarch64.dmg' }],
-        ios: [{ name: 'Shadowrocket', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' }],
-        linux: [{ name: 'Clash Verge Rev', repo: 'clash-verge-rev/clash-verge-rev', match: 'amd64.deb' }]
+        mac: [
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'aarch64.dmg' }, { name: 'macOS Intel (DMG)', repo: 'clash-verge-rev/clash-verge-rev', match: 'x64.dmg' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'macOS Apple Silicon (DMG)', repo: 'chen08209/FlClash', match: 'macos-arm64.dmg' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Release 页面', url: 'https://github.com/SagerNet/sing-box/releases/latest' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'macOS DMG', repo: 'hiddify/hiddify-next', match: 'MacOS.dmg' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Release 页面', url: 'https://github.com/MatsuriDayo/nekoray/releases/latest' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'macOS DMG', repo: 'KaringX/karing', match: 'macos_universal.dmg' } ] },
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'Mac App Store (Apple Silicon)', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] }
+        ],
+        ios: [
+            { name: 'Shadowrocket', icon: shadowrocketIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/shadowrocket/id932747118' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/sing-box/id6451299863' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777032' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'App Store 下载', url: 'https://apps.apple.com/us/app/karing/id6471343750' } ] }
+        ],
+        linux: [
+            { name: 'Clash Verge Rev', icon: clashVergeIcon, links: [ { name: 'Linux amd64 Deb', repo: 'clash-verge-rev/clash-verge-rev', match: 'amd64.deb' } ] },
+            { name: 'FlClash', icon: flClashIcon, links: [ { name: 'Linux AppImage', repo: 'chen08209/FlClash', match: 'linux-amd64.AppImage' } ] },
+            { name: 'Sing-box', icon: singboxIcon, links: [ { name: 'Linux amd64 Deb', repo: 'SagerNet/sing-box', match: 'linux_amd64.deb' } ] },
+            { name: 'Hiddify', icon: hiddifyIcon, links: [ { name: 'Linux AppImage', repo: 'hiddify/hiddify-next', match: 'Linux-x64-AppImage.AppImage' } ] },
+            { name: 'NekoRay', icon: nekoIcon, links: [ { name: 'Linux AppImage', repo: 'MatsuriDayo/nekoray', match: 'linux-x64.AppImage' } ] },
+            { name: 'Karing', icon: karingIcon, links: [ { name: 'Linux amd64 Deb', repo: 'KaringX/karing', match: 'linux_amd64.deb' } ] }
+        ]
     };
+
     function renderOS(os) {
         const dlGrid = document.getElementById('dlGrid');
-        dlGrid.innerHTML = (dlData[os] || []).map(a => `<a class="dl-link" href="${a.url || `https://github.com/${a.repo}/releases/latest`}" target="_blank">${a.name}</a>`).join('');
+        dlGrid.innerHTML = '';
+        (dlData[os] || []).forEach(app => {
+            const wrap = document.createElement('div');
+            wrap.className = 'dl-item';
+            const linksHTML = app.links.map(l => {
+                if (l.url) {
+                    return `<a class="dl-link" href="${l.url}" target="_blank"><svg class="dl-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>${l.name}</a>`;
+                } else if (l.repo) {
+                    return `<a class="dl-link dynamic-dl" href="#" data-repo="${l.repo}" data-match="${l.match}"><svg class="dl-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span class="dl-text">${l.name}</span></a>`;
+                }
+            }).join('');
+            wrap.innerHTML = `<button class="app-btn dl-header">${app.icon}<span class="app-name">${app.name}</span><svg class="dl-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="dl-links">${linksHTML}</div>`;
+            dlGrid.appendChild(wrap);
+            wrap.querySelector('.dl-header').addEventListener('click', () => {
+                const ls = wrap.querySelector('.dl-links');
+                const isOpen = ls.classList.contains('open');
+                document.querySelectorAll('.dl-links').forEach(e => e.classList.remove('open'));
+                document.querySelectorAll('.dl-chevron').forEach(e => e.style.transform = 'rotate(0deg)');
+                if (!isOpen) {
+                    ls.classList.add('open');
+                    wrap.querySelector('.dl-chevron').style.transform = 'rotate(180deg)';
+                }
+            });
+        });
     }
+
+    document.addEventListener('click', async (e) => {
+        const dlLink = e.target.closest('.dynamic-dl');
+        if (!dlLink) return;
+        e.preventDefault();
+        if (dlLink.classList.contains('loading')) return;
+        const textSpan = dlLink.querySelector('.dl-text');
+        const originalText = textSpan.innerText;
+        textSpan.innerText = '获取中...';
+        dlLink.classList.add('loading');
+        try {
+            const repo = dlLink.dataset.repo;
+            const matchStr = dlLink.dataset.match;
+            const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
+            if (!res.ok) throw new Error('ERR');
+            const data = await res.json();
+            const asset = data.assets.find(a => a.name.includes(matchStr));
+            if (asset) {
+                textSpan.innerText = '下载中...';
+                window.location.href = 'https://jsnzkpg4.pages.dev/' + asset.browser_download_url;
+                setTimeout(() => { textSpan.innerText = originalText; dlLink.classList.remove('loading'); }, 2000);
+            } else {
+                window.open(`https://github.com/${repo}/releases/latest`, '_blank');
+                textSpan.innerText = originalText;
+                dlLink.classList.remove('loading');
+            }
+        } catch (err) {
+            window.open(`https://github.com/${dlLink.dataset.repo}/releases/latest`, '_blank');
+            textSpan.innerText = originalText;
+            dlLink.classList.remove('loading');
+        }
+    });
+
     document.querySelectorAll('.os-tab').forEach(t => t.addEventListener('click', function() {
         document.querySelectorAll('.os-tab').forEach(x => x.classList.remove('active'));
-        this.classList.add('active'); renderOS(this.dataset.os);
+        this.classList.add('active');
+        renderOS(this.dataset.os);
     }));
+
     renderOS('android');
 </script>
 </body>

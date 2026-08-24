@@ -771,7 +771,7 @@
         const subDomain = getSelectedSubDomain();
         let text = raw.trim();
         let decoded = decodeBase64Safe(text);
-        if (decoded && /^(vless|trojan|vmess|ss|ssr|hysteria2?):\/\//im.test(decoded)) {
+        if (decoded && /^(vless|trojan|vmess|ss|ssr|hysteria2?|hy2):\/\//im.test(decoded)) {
             text = decoded;
         }
 
@@ -779,7 +779,7 @@
         let targetNode = null;
         for (const line of lines) {
             const trimmed = line.trim();
-            if (/^(vless|trojan|vmess|ss|ssr|hysteria2?):\/\//i.test(trimmed)) {
+            if (/^(vless|trojan|vmess|ss|ssr|hysteria2?|hy2):\/\//i.test(trimmed)) {
                 targetNode = trimmed;
                 break;
             }
@@ -816,24 +816,28 @@
     }
 
     async function smartFetch(url) {
-        let cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
-        const targetList = [
-            `https://down.nigx.cn/${cleanUrl}`,
-            url.startsWith('http') ? url : `https://${url}`
-        ];
+        const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+        const proxyUrl = `https://corsproxy.io/?key=ca40fa60&url=${encodeURIComponent(fullUrl)}`;
 
-        for (const target of targetList) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 4500);
-                const res = await fetch(target, { signal: controller.signal });
-                clearTimeout(timeoutId);
-                if (res.ok) {
-                    const txt = await res.text();
-                    if (txt && txt.trim().length > 0) return txt;
-                }
-            } catch (e) {}
-        }
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+            const res = await fetch(proxyUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (res.ok) {
+                const txt = await res.text();
+                if (txt && txt.trim().length > 0) return txt;
+            }
+        } catch (e) {}
+
+        try {
+            const directRes = await fetch(fullUrl);
+            if (directRes.ok) {
+                const txt = await directRes.text();
+                if (txt && txt.trim().length > 0) return txt;
+            }
+        } catch (e) {}
+
         throw new Error('FETCH_FAILED');
     }
 
@@ -854,7 +858,7 @@
         fetchBtn.disabled = true; fetchBtn.textContent = '...';
         const results = [];
         for (const url of urls) {
-            if (/^(vless|trojan|ss|vmess|hysteria2?):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
+            if (/^(vless|trojan|ss|vmess|hysteria2?|hy2):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
             try {
                 const code = await smartFetch(url);
                 const config = parseConfig(code);
@@ -866,7 +870,7 @@
                             const u = url.startsWith('http') ? new URL(url) : new URL('https://' + url);
                             parsedHost = u.hostname;
                         } catch(e) {}
-                        domain = parsedHost || 'vl.zh08.kdns.fr';
+                        domain = parsedHost || 'cute.aicore.quest';
                     }
                     const targetUrl = buildUrl(domain, config.subPath);
                     const deepResult = await processAndFetchDeep(targetUrl, domain); 

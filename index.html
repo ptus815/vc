@@ -792,18 +792,35 @@
         }, 3000);
     }
 
-    function getProxyUrl(url) { 
-        if (url.includes('raw.githubusercontent.com') || url.includes('github.com')) {
-            return url;
+    async function smartFetch(url) {
+        const attempts = [
+            (u) => u,
+            (u) => u.includes('raw.githubusercontent.com') ? u.replace('https://raw.githubusercontent.com', 'https://raw.gitmirror.com') : null,
+            (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+            (u) => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
+        ].filter(Boolean);
+
+        for (const getTarget of attempts) {
+            const target = getTarget(url);
+            if (!target) continue;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const res = await fetch(target, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const txt = await res.text();
+                    if (txt && txt.length > 0) return txt;
+                }
+            } catch (e) {}
         }
-        return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+        throw new Error('FETCH_FAILED');
     }
 
     async function processAndFetchDeep(urlStr) {
         try {
-            const configResponse = await fetch(getProxyUrl(urlStr));
-            if (!configResponse.ok) throw new Error();
-            const rawText = await configResponse.text(); const decodedText = decodeBase64Safe(rawText);
+            const rawText = await smartFetch(urlStr);
+            const decodedText = decodeBase64Safe(rawText);
             let res = processDirectNode(decodedText); if (res.success) return res;
             res = processDirectNode(rawText); if (res.success) return res;
             return { success: false, error: 'ERR' };
@@ -816,13 +833,16 @@
         for (const url of urls) {
             if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
             try {
-                const response = await fetch(getProxyUrl(url));
-                if (!response.ok) throw new Error();
-                const code = await response.text(); const config = parseConfig(code);
+                const code = await smartFetch(url);
+                const config = parseConfig(code);
                 if (config) {
                     const targetUrl = buildUrl(config.domain, config.subPath);
                     const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult);
-                } else { results.push({ success: false, error: 'ERR' }); }
+                } else {
+                    let res = processDirectNode(decodeBase64Safe(code));
+                    if (!res.success) res = processDirectNode(code);
+                    results.push(res);
+                }
             } catch (err) { results.push({ success: false, error: 'ERR' }); }
         }
         renderAndAnimate(results); fetchBtn.disabled = false; fetchBtn.textContent = '生成订阅';
@@ -871,11 +891,10 @@
         try {
             getRandomLinkBtn.disabled = true;
             getRandomLinkBtn.textContent = '...';
-            const res = await fetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
-            if (!res.ok) throw new Error();
-            let text = await res.text();
-            try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
-            const urls = text.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
+            const text = await smartFetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
+            let parsedText = text;
+            try { window.__vcUrls = ""; eval(parsedText); if (window.__vcUrls) parsedText = window.__vcUrls; } catch(e) {}
+            const urls = parsedText.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
             if (urls.length === 0) throw new Error();
             executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
         } catch (err) {

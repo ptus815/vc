@@ -793,10 +793,7 @@
         }, 3000);
     }
 
-    // 🔄 修改：使用免费公共 CORS 代理（无需 API Key）
-    function getProxyUrl(url) {
-        return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-    }
+    function getProxyUrl(url) { return 'https://corsproxy.io/?' + encodeURIComponent(url); }
 
     async function processAndFetchDeep(urlStr) {
         try {
@@ -865,21 +862,19 @@
         });
     });
 
-    // 🔄 修改：获取随机订阅链接，去除 seep.eu.org 并改用新代理
     const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');
     getRandomLinkBtn.addEventListener('click', async () => {
         try {
             getRandomLinkBtn.disabled = true;
             getRandomLinkBtn.textContent = '...';
-            // 直接请求 GitHub Raw，通过 CORS 代理
-            const res = await fetch(getProxyUrl('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'));
+            const res = await fetch(getProxyUrl('https://seep.eu.org/https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'));
             if (!res.ok) throw new Error();
-            const text = await res.text();
+            let text = await res.text();
+            try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
             const urls = text.split(/[\r\n]+/).filter(line => line.trim().startsWith('http'));
             if (urls.length === 0) throw new Error();
             executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
         } catch (err) {
-            // 静默失败，已保留原错误处理
         } finally {
             getRandomLinkBtn.disabled = false;
             getRandomLinkBtn.textContent = '获取订阅链接';

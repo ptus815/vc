@@ -64,28 +64,84 @@ function parseConfig(code) {
 
 async function serverFetch(url) {
     const res = await fetch(url, { 
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }, 
+        headers: { 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' 
+        }, 
         signal: AbortSignal.timeout(5000) 
     });
     if (!res.ok) throw new Error('FETCH_FAILED');
     return await res.text();
 }
 
+function extractAllUrls(text) {
+    if (!text) return [];
+    const set = new Set();
+    
+    const matches = text.match(/https?:\/\/[^\s"'`<>\\)]+/gi);
+    if (matches) matches.forEach(u => set.add(u.trim()));
+
+    try {
+        const decoded = Buffer.from(text.trim(), 'base64').toString('utf-8');
+        const decMatches = decoded.match(/https?:\/\/[^\s"'`<>\\)]+/gi);
+        if (decMatches) decMatches.forEach(u => set.add(u.trim()));
+    } catch (e) {}
+
+    return Array.from(set).filter(u => u.startsWith('http'));
+}
+
+async function fetchVcList() {
+    const sources = [
+        'https://raw.githubusercontent.com/ptus815/vc/main/vc.txt',
+        'https://cdn.jsdelivr.net/gh/ptus815/vc@main/vc.txt',
+        'https://fastly.jsdelivr.net/gh/ptus815/vc@main/vc.txt',
+        'https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'
+    ];
+
+    for (const src of sources) {
+        try {
+            const txt = await serverFetch(src);
+            const urls = extractAllUrls(txt);
+            if (urls.length > 0) return urls;
+        } catch (e) {}
+    }
+    return [
+        'https://cute.aicore.quest/cute',
+        'https://vercel.igac.eu.cc/vercel'
+    ];
+}
+
 async function resolveUrlToNode(url, subDomain) {
-    const code = await serverFetch(url);
-    const config = parseConfig(code);
+    if (/^(vless|trojan|ss|vmess|hysteria2?|hy2):\/\//i.test(url)) {
+        return processDirectNode(url, subDomain);
+    }
+
+    const rawContent = await serverFetch(url);
+
+    let directRes = processDirectNode(rawContent, subDomain);
+    if (directRes.success) return directRes;
+
+    const config = parseConfig(rawContent);
     if (config) {
         let domain = config.domain;
-        if (domain === 'your-domain.com') {
-            domain = new URL(url).hostname;
+        if (domain === 'your-domain.com' || !domain) {
+            try {
+                domain = new URL(url).hostname;
+            } catch(e) {
+                domain = 'cute.aicore.quest';
+            }
         }
         const cleanDomain = domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
-        const cleanPath = config.subPath.replace(/^\/+/, '');
+        const cleanPath = (config.subPath || '').replace(/^\/+/, '');
         const targetUrl = `https://${cleanDomain}/${cleanPath}`;
-        const rawNodeText = await serverFetch(targetUrl);
-        return processDirectNode(rawNodeText, subDomain);
+        
+        try {
+            const subContent = await serverFetch(targetUrl);
+            let subRes = processDirectNode(subContent, subDomain);
+            if (subRes.success) return subRes;
+        } catch(e) {}
     }
-    return processDirectNode(code, subDomain);
+
+    return processDirectNode(rawContent, subDomain);
 }
 
 export default async function handler(req, res) {
@@ -99,20 +155,9 @@ export default async function handler(req, res) {
 
     try {
         if (action === 'random') {
-            const vcText = await serverFetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
-            let parsedText = vcText;
-            try {
-                const fn = new Function('window', parsedText + '; return window.__vcUrls;');
-                const winObj = {};
-                const urlsResult = fn(winObj);
-                if (urlsResult) parsedText = urlsResult;
-            } catch (e) {}
-
-            const urls = parsedText.split(/[\r\n]+/).filter(l => l.trim().startsWith('http'));
-            if (!urls.length) throw new Error('EMPTY_URLS');
-
-            let lastResult = { success: false, error: 'ERR' };
+            const urls = await fetchVcList();
             const shuffled = urls.sort(() => 0.5 - Math.random());
+
             for (let i = 0; i < Math.min(6, shuffled.length); i++) {
                 try {
                     const nodeRes = await resolveUrlToNode(shuffled[i].trim(), subDomain);
@@ -123,18 +168,13 @@ export default async function handler(req, res) {
                     continue;
                 }
             }
-
-            return res.status(200).json({ results: [lastResult] });
+            return res.status(200).json({ results: [{ success: false, error: 'ERR' }] });
         }
 
         if (req.method === 'POST') {
             const { urls = [] } = req.body || {};
             const results = [];
             for (const url of urls) {
-                if (/^(vless|trojan|ss|vmess|hysteria2?|hy2):\/\//i.test(url)) {
-                    results.push(processDirectNode(url, subDomain));
-                    continue;
-                }
                 try {
                     const nodeRes = await resolveUrlToNode(url, subDomain);
                     results.push(nodeRes);
@@ -147,6 +187,6 @@ export default async function handler(req, res) {
 
         return res.status(400).json({ error: 'Invalid Request' });
     } catch (err) {
-        return res.status(500).json({ error: err.message, results: [{ success: false, error: 'ERR' }] });
+        return res.status(200).json({ results: [{ success: false, error: 'ERR' }] });
     }
 }

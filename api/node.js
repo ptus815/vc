@@ -9,10 +9,11 @@ function decodeBase64Safe(str) {
 }
 
 function buildSubUrl(targetNode, subDomain) {
-    const isLinkStyle = subDomain.includes('eooce') || subDomain.includes('bbc');
+    const cleanSub = subDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    const isLinkStyle = cleanSub.includes('eooce') || cleanSub.includes('lzjbaby');
     
     if (isLinkStyle) {
-        return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+        return `https://${cleanSub}/sub?link=${encodeURIComponent(targetNode)}`;
     }
 
     if (targetNode.startsWith('vless://') || targetNode.startsWith('trojan://')) {
@@ -26,16 +27,22 @@ function buildSubUrl(targetNode, subDomain) {
             if (uuid) params.set('uuid', uuid);
             if (!params.has('host')) params.set('host', host);
             if (!params.has('sni')) params.set('sni', host);
+            if (!params.has('type')) params.set('type', 'ws');
+            if (!params.has('security')) params.set('security', 'tls');
+            if (!params.has('encryption')) params.set('encryption', 'none');
+            if (!params.has('insecure')) params.set('insecure', '0');
+            if (!params.has('allowInsecure')) params.set('allowInsecure', '0');
+            if (!params.has('fp')) params.set('fp', 'chrome');
             if (port && port !== '443') params.set('port', port);
             if (parsed.hash) params.set('remarks', decodeURIComponent(parsed.hash.substring(1)));
 
-            return `https://${subDomain}/sub?${params.toString()}`;
+            return `https://${cleanSub}/sub?${params.toString()}`;
         } catch (e) {
-            return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+            return `https://${cleanSub}/sub?link=${encodeURIComponent(targetNode)}`;
         }
     }
 
-    return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+    return `https://${cleanSub}/sub?link=${encodeURIComponent(targetNode)}`;
 }
 
 function processDirectNode(raw, subDomain = 'sub.eooce.xx.kg') {

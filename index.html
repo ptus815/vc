@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀Edge</title>
+    <title>dashboard</title>
+    
+    <!-- 基础描述 -->
+    <meta name="description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
+    
+    <!-- Open Graph (Telegram / 微信 / Discord 网页卡片预览) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dashboard">
+    <meta property="og:description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
+    <meta property="og:image" content="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Dashboard">
+    <meta name="twitter:description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
+    <meta name="twitter:image" content="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
+
+    <!-- 浏览器与手机主屏幕 Vercel 图标 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,2 2,22 22,22' fill='%23000000'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -132,7 +151,7 @@
         .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
         
-        /* 调整后的客户端下载区块：间距下移，首屏不漏出 */
+        /* 客户端下载区块：间距下移 */
         .download-card {
             background: transparent;
             border: none;
@@ -141,11 +160,33 @@
             padding-bottom: 20px;
         }
         
-        .os-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        /* 居中排列的选项卡图标栏 */
+        .os-tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
         .os-tabs::-webkit-scrollbar { display: none; }
         .os-tab {
-            padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: #eaeaea; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: all 0.3s;
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #eaeaea;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
         }
         .os-tab.active { background: #3291ff; color: #fff; border-color: #3291ff; }
         body.white-theme .os-tab { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); color: #111; }

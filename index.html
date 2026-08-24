@@ -793,11 +793,8 @@
     }
 
     function getProxyUrl(url) { 
-        if (url.includes('raw.githubusercontent.com')) {
-            return url.replace('https://raw.githubusercontent.com', 'https://raw.gitmirror.com');
-        }
-        if (url.includes('github.com')) {
-            return 'https://mirror.ghproxy.com/' + url;
+        if (url.includes('raw.githubusercontent.com') || url.includes('github.com')) {
+            return url;
         }
         return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
     }
@@ -874,7 +871,7 @@
         try {
             getRandomLinkBtn.disabled = true;
             getRandomLinkBtn.textContent = '...';
-            const res = await fetch('https://raw.gitmirror.com/ptus815/vc/refs/heads/main/vc.txt');
+            const res = await fetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
             if (!res.ok) throw new Error();
             let text = await res.text();
             try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}

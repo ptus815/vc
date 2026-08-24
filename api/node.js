@@ -63,9 +63,29 @@ function parseConfig(code) {
 }
 
 async function serverFetch(url) {
-    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(6000) });
+    const res = await fetch(url, { 
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }, 
+        signal: AbortSignal.timeout(5000) 
+    });
     if (!res.ok) throw new Error('FETCH_FAILED');
     return await res.text();
+}
+
+async function resolveUrlToNode(url, subDomain) {
+    const code = await serverFetch(url);
+    const config = parseConfig(code);
+    if (config) {
+        let domain = config.domain;
+        if (domain === 'your-domain.com') {
+            domain = new URL(url).hostname;
+        }
+        const cleanDomain = domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+        const cleanPath = config.subPath.replace(/^\/+/, '');
+        const targetUrl = `https://${cleanDomain}/${cleanPath}`;
+        const rawNodeText = await serverFetch(targetUrl);
+        return processDirectNode(rawNodeText, subDomain);
+    }
+    return processDirectNode(code, subDomain);
 }
 
 export default async function handler(req, res) {
@@ -91,23 +111,20 @@ export default async function handler(req, res) {
             const urls = parsedText.split(/[\r\n]+/).filter(l => l.trim().startsWith('http'));
             if (!urls.length) throw new Error('EMPTY_URLS');
 
-            const randomTarget = urls[Math.floor(Math.random() * urls.length)];
-            const code = await serverFetch(randomTarget);
-            const config = parseConfig(code);
-
-            let nodeRes;
-            if (config) {
-                let domain = config.domain;
-                if (domain === 'your-domain.com') domain = new URL(randomTarget).hostname;
-                const subPath = config.subPath.replace(/^\/+/, '');
-                const targetUrl = `https://${domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '')}/${subPath}`;
-                const rawNodeText = await serverFetch(targetUrl);
-                nodeRes = processDirectNode(rawNodeText, subDomain);
-            } else {
-                nodeRes = processDirectNode(code, subDomain);
+            let lastResult = { success: false, error: 'ERR' };
+            const shuffled = urls.sort(() => 0.5 - Math.random());
+            for (let i = 0; i < Math.min(6, shuffled.length); i++) {
+                try {
+                    const nodeRes = await resolveUrlToNode(shuffled[i].trim(), subDomain);
+                    if (nodeRes.success) {
+                        return res.status(200).json({ results: [nodeRes] });
+                    }
+                } catch (err) {
+                    continue;
+                }
             }
 
-            return res.status(200).json({ results: [nodeRes] });
+            return res.status(200).json({ results: [lastResult] });
         }
 
         if (req.method === 'POST') {
@@ -119,17 +136,8 @@ export default async function handler(req, res) {
                     continue;
                 }
                 try {
-                    const code = await serverFetch(url);
-                    const config = parseConfig(code);
-                    if (config) {
-                        let domain = config.domain;
-                        if (domain === 'your-domain.com') domain = new URL(url).hostname;
-                        const targetUrl = `https://${domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '')}/${config.subPath.replace(/^\/+/, '')}`;
-                        const rawNodeText = await serverFetch(targetUrl);
-                        results.push(processDirectNode(rawNodeText, subDomain));
-                    } else {
-                        results.push(processDirectNode(code, subDomain));
-                    }
+                    const nodeRes = await resolveUrlToNode(url, subDomain);
+                    results.push(nodeRes);
                 } catch (e) {
                     results.push({ success: false, error: 'ERR' });
                 }

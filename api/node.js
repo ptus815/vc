@@ -8,37 +8,53 @@ function decodeBase64Safe(str) {
     }
 }
 
+function parseVlessNode(link) {
+    const match = link.match(/^(?:vless|trojan):\/\/([^@]+)@([^:?#]+)(?::(\d+))?(?:\?([^#]*))?(?:#(.*))?$/i);
+    if (!match) return null;
+    
+    const uuid = match[1];
+    const host = match[2];
+    const port = match[3] || '443';
+    const queryStr = match[4] || '';
+    const hash = match[5] || '';
+    const searchParams = new URLSearchParams(queryStr);
+
+    return { uuid, host, port, searchParams, hash };
+}
+
 function buildSubUrl(targetNode, subDomain) {
     const cleanSub = subDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
-    const isLinkStyle = cleanSub.includes('eooce') || cleanSub.includes('lzjbaby');
     
-    if (isLinkStyle) {
-        return `https://${cleanSub}/sub?link=${encodeURIComponent(targetNode)}`;
-    }
+    const isWorkerVless2Sub = cleanSub.includes('owo.o00o.ooo') || 
+                              cleanSub.includes('sub.bbc.xx.kg') || 
+                              cleanSub.includes('zrf.zrf.me') || 
+                              cleanSub.includes('sub.keaeye.icu') || 
+                              cleanSub.includes('sub.mot.cloudns.biz');
 
-    if (targetNode.startsWith('vless://') || targetNode.startsWith('trojan://')) {
-        try {
-            const parsed = new URL(targetNode);
-            const uuid = parsed.username;
-            const host = parsed.hostname;
-            const port = parsed.port || '443';
-            const params = new URLSearchParams(parsed.search);
-
-            if (uuid) params.set('uuid', uuid);
-            if (!params.has('host')) params.set('host', host);
-            if (!params.has('sni')) params.set('sni', host);
-            if (!params.has('type')) params.set('type', 'ws');
-            if (!params.has('security')) params.set('security', 'tls');
-            if (!params.has('encryption')) params.set('encryption', 'none');
-            if (!params.has('insecure')) params.set('insecure', '0');
-            if (!params.has('allowInsecure')) params.set('allowInsecure', '0');
-            if (!params.has('fp')) params.set('fp', 'chrome');
-            if (port && port !== '443') params.set('port', port);
-            if (parsed.hash) params.set('remarks', decodeURIComponent(parsed.hash.substring(1)));
-
-            return `https://${cleanSub}/sub?${params.toString()}`;
-        } catch (e) {
-            return `https://${cleanSub}/sub?link=${encodeURIComponent(targetNode)}`;
+    if (isWorkerVless2Sub) {
+        const nodeInfo = parseVlessNode(targetNode);
+        if (nodeInfo) {
+            const { uuid, host, port, searchParams } = nodeInfo;
+            const p = new URLSearchParams();
+            
+            p.set('uuid', uuid);
+            p.set('path', searchParams.get('path') || `/${uuid.slice(0, 8)}`);
+            p.set('security', searchParams.get('security') || 'tls');
+            p.set('encryption', searchParams.get('encryption') || 'none');
+            p.set('insecure', searchParams.get('insecure') || '0');
+            p.set('host', searchParams.get('host') || host);
+            p.set('fp', searchParams.get('fp') || 'chrome');
+            p.set('type', searchParams.get('type') || 'ws');
+            p.set('allowInsecure', searchParams.get('allowInsecure') || '0');
+            p.set('sni', searchParams.get('sni') || searchParams.get('host') || host);
+            
+            if (port && port !== '443') p.set('port', port);
+            
+            for (const [k, v] of searchParams.entries()) {
+                if (!p.has(k)) p.set(k, v);
+            }
+            
+            return `https://${cleanSub}/sub?${p.toString()}`;
         }
     }
 

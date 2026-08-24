@@ -1,3 +1,5 @@
+import vm from 'node:vm';
+
 function decodeBase64Safe(str) {
     try {
         return Buffer.from(str, 'base64').toString('utf-8');
@@ -65,49 +67,60 @@ function parseConfig(code) {
 async function serverFetch(url) {
     const res = await fetch(url, { 
         headers: { 
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
         }, 
-        signal: AbortSignal.timeout(5000) 
+        signal: AbortSignal.timeout(6000) 
     });
     if (!res.ok) throw new Error('FETCH_FAILED');
     return await res.text();
 }
 
-function extractAllUrls(text) {
-    if (!text) return [];
-    const set = new Set();
-    
-    const matches = text.match(/https?:\/\/[^\s"'`<>\\)]+/gi);
-    if (matches) matches.forEach(u => set.add(u.trim()));
+function parseUrlsFromVcText(rawText) {
+    if (!rawText) return [];
 
     try {
-        const decoded = Buffer.from(text.trim(), 'base64').toString('utf-8');
-        const decMatches = decoded.match(/https?:\/\/[^\s"'`<>\\)]+/gi);
-        if (decMatches) decMatches.forEach(u => set.add(u.trim()));
+        const sandbox = {
+            __vcUrls: ''
+        };
+        sandbox.window = sandbox;
+        sandbox.self = sandbox;
+        sandbox.global = sandbox;
+        sandbox.globalThis = sandbox;
+
+        const context = vm.createContext(sandbox);
+        vm.runInContext(rawText, context, { timeout: 3000 });
+
+        const decodedUrls = sandbox.__vcUrls || sandbox.window?.__vcUrls;
+        if (decodedUrls && typeof decodedUrls === 'string') {
+            const list = decodedUrls.split(/[\r\n\s]+/).filter(l => l.trim().startsWith('http'));
+            if (list.length > 0) return list;
+        }
     } catch (e) {}
 
-    return Array.from(set).filter(u => u.startsWith('http'));
+    const list = rawText.split(/[\r\n\s]+/).filter(l => l.trim().startsWith('http'));
+    if (list.length > 0) return list;
+
+    const regexMatches = rawText.match(/https?:\/\/[^\s"'`<>\\)]+/gi);
+    if (regexMatches) return Array.from(new Set(regexMatches.map(u => u.trim())));
+
+    return [];
 }
 
 async function fetchVcList() {
     const sources = [
         'https://raw.githubusercontent.com/ptus815/vc/main/vc.txt',
-        'https://cdn.jsdelivr.net/gh/ptus815/vc@main/vc.txt',
-        'https://fastly.jsdelivr.net/gh/ptus815/vc@main/vc.txt',
-        'https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'
+        'https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt',
+        'https://cdn.jsdelivr.net/gh/ptus815/vc@main/vc.txt'
     ];
 
     for (const src of sources) {
         try {
-            const txt = await serverFetch(src);
-            const urls = extractAllUrls(txt);
+            const text = await serverFetch(src);
+            const urls = parseUrlsFromVcText(text);
             if (urls.length > 0) return urls;
         } catch (e) {}
     }
-    return [
-        'https://cute.aicore.quest/cute',
-        'https://vercel.igac.eu.cc/vercel'
-    ];
+    return [];
 }
 
 async function resolveUrlToNode(url, subDomain) {
@@ -156,9 +169,10 @@ export default async function handler(req, res) {
     try {
         if (action === 'random') {
             const urls = await fetchVcList();
-            const shuffled = urls.sort(() => 0.5 - Math.random());
+            if (!urls.length) throw new Error('EMPTY_URLS');
 
-            for (let i = 0; i < Math.min(6, shuffled.length); i++) {
+            const shuffled = urls.sort(() => 0.5 - Math.random());
+            for (let i = 0; i < Math.min(8, shuffled.length); i++) {
                 try {
                     const nodeRes = await resolveUrlToNode(shuffled[i].trim(), subDomain);
                     if (nodeRes.success) {
@@ -187,6 +201,6 @@ export default async function handler(req, res) {
 
         return res.status(400).json({ error: 'Invalid Request' });
     } catch (err) {
-        return res.status(200).json({ results: [{ success: false, error: 'ERR' }] });
+        return res.status(500).json({ error: err.message, results: [{ success: false, error: 'ERR' }] });
     }
 }

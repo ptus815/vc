@@ -792,7 +792,10 @@
         }, 3000);
     }
 
-    function getProxyUrl(url) { return 'https://corsproxy.io/?' + encodeURIComponent(url); }
+    // 替换为可用的公共 CORS 代理
+    function getProxyUrl(url) { 
+        return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url); 
+    }
 
     async function processAndFetchDeep(urlStr) {
         try {
@@ -866,7 +869,8 @@
         try {
             getRandomLinkBtn.disabled = true;
             getRandomLinkBtn.textContent = '...';
-            const res = await fetch(getProxyUrl('https://seep.eu.org/https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt'));
+            // GitHub Raw 原生支持 CORS 跨域，直接请求即可，去除失效的代理
+            const res = await fetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
             if (!res.ok) throw new Error();
             let text = await res.text();
             try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}
@@ -874,6 +878,7 @@
             if (urls.length === 0) throw new Error();
             executeRemoteFetch([urls[Math.floor(Math.random() * urls.length)]]);
         } catch (err) {
+            console.error('获取链接失败:', err);
         } finally {
             getRandomLinkBtn.disabled = false;
             getRandomLinkBtn.textContent = '获取订阅链接';

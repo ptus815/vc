@@ -151,16 +151,12 @@
             border-radius: 16px;
             resize: vertical;
             min-height: 320px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            border-left: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #eaeaea;
             outline: none;
             transition: all 0.3s;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 10px 30px -10px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4);
         }
 
         textarea::placeholder {
@@ -170,23 +166,23 @@
 
         textarea:focus {
             border-color: #3291ff;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-            box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.1), 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.8);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 2px rgba(50, 145, 255, 0.3), 0 12px 40px -10px rgba(0,0,0,0.6);
         }
 
         body.white-theme textarea {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.8);
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.15);
             color: #111111;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 10px 30px -10px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.03);
         }
-        body.white-theme textarea::placeholder { color: rgba(0, 0, 0, 0.4); }
+        body.white-theme textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
         body.white-theme textarea:focus {
             border-color: #0070f3;
-            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
-            box-shadow: inset 0 0 20px rgba(0, 112, 243, 0.05), 0 0 0 2px rgba(0, 112, 243, 0.2), 0 12px 40px -10px rgba(0,0,0,0.15);
+            background: rgba(0, 112, 243, 0.02);
+            box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.15), 0 12px 40px -10px rgba(0,0,0,0.08);
         }
 
         .settings-card {

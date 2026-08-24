@@ -792,9 +792,14 @@
         }, 3000);
     }
 
-    // 替换为可用的公共 CORS 代理
     function getProxyUrl(url) { 
-        return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url); 
+        if (url.includes('raw.githubusercontent.com')) {
+            return url.replace('https://raw.githubusercontent.com', 'https://raw.gitmirror.com');
+        }
+        if (url.includes('github.com')) {
+            return 'https://mirror.ghproxy.com/' + url;
+        }
+        return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
     }
 
     async function processAndFetchDeep(urlStr) {
@@ -869,8 +874,7 @@
         try {
             getRandomLinkBtn.disabled = true;
             getRandomLinkBtn.textContent = '...';
-            // GitHub Raw 原生支持 CORS 跨域，直接请求即可，去除失效的代理
-            const res = await fetch('https://raw.githubusercontent.com/ptus815/vc/refs/heads/main/vc.txt');
+            const res = await fetch('https://raw.gitmirror.com/ptus815/vc/refs/heads/main/vc.txt');
             if (!res.ok) throw new Error();
             let text = await res.text();
             try { window.__vcUrls = ""; eval(text); if (window.__vcUrls) text = window.__vcUrls; } catch(e) {}

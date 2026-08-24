@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dashboard</title>
+    <title>Dashboard</title>
     
-    <!-- 基础描述 -->
     <meta name="description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
     
-    <!-- Open Graph (Telegram / 微信 / Discord 网页卡片预览) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Dashboard">
     <meta property="og:description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
     <meta property="og:image" content="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Dashboard">
     <meta name="twitter:description" content="简洁高效的节点解析与订阅生成工具，支持多协议节点转换与客户端一键导入配置。">
     <meta name="twitter:image" content="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
 
-    <!-- 浏览器与手机主屏幕 Vercel 图标 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,2 2,22 22,22' fill='%23000000'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png">
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -59,7 +56,6 @@
         .moon-icon { display: block; } .sun-icon { display: none; }
         body.white-theme .moon-icon { display: none; } body.white-theme .sun-icon { display: block; }
         .theme-toggle:hover svg { transform: scale(1.1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         
         textarea {
             width: 100%; padding: 22px 24px; font-size: 15px; font-family: ui-monospace, Consolas, monospace;
@@ -118,11 +114,20 @@
         #getRandomLinkBtn { background: #3291ff; color: #ffffff; }
         body.white-theme #getRandomLinkBtn { background: #0070f3; }
         
-        .results { display: flex; flex-direction: column; gap: 16px; }
+        .results { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+        
+        @keyframes floatToast {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.98); }
+            12% { opacity: 1; transform: translateY(0) scale(1); }
+            80% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-10px) scale(0.98); }
+        }
+
         .result-item {
             display: flex; align-items: center; padding: 18px 24px; border-radius: 12px; background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0, 112, 243, 0.4);
             position: relative; overflow: hidden;
+            animation: floatToast 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
         .result-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3291ff; }
         body.white-theme .result-item { background: rgba(255, 255, 255, 0.75); }
@@ -151,7 +156,6 @@
         .app-icon { width: 24px; height: 24px; flex-shrink: 0; stroke-width: 2; object-fit: contain; }
         .app-name { font-size: 15px; font-weight: 500; margin-left: 16px; flex: 1; text-align: left; }
         
-        /* 客户端下载区块：间距下移 */
         .download-card {
             background: transparent;
             border: none;
@@ -160,7 +164,6 @@
             padding-bottom: 20px;
         }
         
-        /* 居中排列的选项卡图标栏 */
         .os-tabs {
             display: flex;
             justify-content: center;
@@ -345,6 +348,7 @@
     setTimeout(typeWriterEffect, 600);
 
     let currentFinalSubUrl = '';
+    let toastTimer = null;
     const resultsContainer = document.getElementById('resultsContainer');
     const importCard = document.getElementById('importCard');
 
@@ -354,6 +358,7 @@
     }
 
     function renderResults(results) {
+        if (toastTimer) clearTimeout(toastTimer);
         resultsContainer.innerHTML = ''; importCard.style.display = 'none'; currentFinalSubUrl = '';
         let html = '', successfulUrls = [];
         for (const item of results) {
@@ -366,6 +371,7 @@
         }
         resultsContainer.innerHTML = html;
         if (successfulUrls.length > 0) { currentFinalSubUrl = successfulUrls[0]; copyToClipboard(successfulUrls.join('\n')); importCard.style.display = 'block'; }
+        toastTimer = setTimeout(() => { resultsContainer.innerHTML = ''; }, 2400);
     }
 
     const getRandomLinkBtn = document.getElementById('getRandomLinkBtn');

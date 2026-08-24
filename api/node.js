@@ -8,6 +8,36 @@ function decodeBase64Safe(str) {
     }
 }
 
+function buildSubUrl(targetNode, subDomain) {
+    const isLinkStyle = subDomain.includes('eooce') || subDomain.includes('bbc');
+    
+    if (isLinkStyle) {
+        return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+    }
+
+    if (targetNode.startsWith('vless://') || targetNode.startsWith('trojan://')) {
+        try {
+            const parsed = new URL(targetNode);
+            const uuid = parsed.username;
+            const host = parsed.hostname;
+            const port = parsed.port || '443';
+            const params = new URLSearchParams(parsed.search);
+
+            if (uuid) params.set('uuid', uuid);
+            if (!params.has('host')) params.set('host', host);
+            if (!params.has('sni')) params.set('sni', host);
+            if (port && port !== '443') params.set('port', port);
+            if (parsed.hash) params.set('remarks', decodeURIComponent(parsed.hash.substring(1)));
+
+            return `https://${subDomain}/sub?${params.toString()}`;
+        } catch (e) {
+            return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+        }
+    }
+
+    return `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+}
+
 function processDirectNode(raw, subDomain = 'sub.eooce.xx.kg') {
     if (!raw) return { success: false, error: 'ERR' };
     let text = raw.trim();
@@ -29,7 +59,7 @@ function processDirectNode(raw, subDomain = 'sub.eooce.xx.kg') {
     if (targetNode) {
         return {
             success: true,
-            url: `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`
+            url: buildSubUrl(targetNode, subDomain)
         };
     }
     return { success: false, error: 'ERR' };

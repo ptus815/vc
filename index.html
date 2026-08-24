@@ -751,7 +751,9 @@
         } catch (e) { return null; }
     }
     function buildUrl(domain, subPath) {
-        domain = domain.replace(/^https?:\/\//, ''); subPath = subPath.replace(/^\/+/, ''); return `https://${domain}/${subPath}`;
+        domain = domain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+        subPath = subPath.replace(/^\/+/, '');
+        return `https://${domain}/${subPath}`;
     }
     function decodeBase64Safe(str) {
         try { return decodeURIComponent(escape(atob(str))); } catch(e) { try { return atob(str); } catch(e2) { return str; } }
@@ -793,33 +795,40 @@
     }
 
     async function smartFetch(url) {
+        const cleanUrl = url.replace(/^https?:\/\//, '');
         const attempts = [
+            (u) => `https://down.nigx.cn/${cleanUrl}`,
             (u) => u,
             (u) => u.includes('raw.githubusercontent.com') ? u.replace('https://raw.githubusercontent.com', 'https://raw.gitmirror.com') : null,
+            (u) => `https://down.nigx.cn/${u}`,
             (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
             (u) => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
         ].filter(Boolean);
 
         for (const getTarget of attempts) {
-            const target = getTarget(url);
+            const target = typeof getTarget === 'function' ? getTarget(url) : getTarget;
             if (!target) continue;
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 4000);
+                const timeoutId = setTimeout(() => controller.abort(), 4500);
                 const res = await fetch(target, { signal: controller.signal });
                 clearTimeout(timeoutId);
                 if (res.ok) {
                     const txt = await res.text();
-                    if (txt && txt.length > 0) return txt;
+                    if (txt && txt.trim().length > 0) return txt;
                 }
             } catch (e) {}
         }
         throw new Error('FETCH_FAILED');
     }
 
-    async function processAndFetchDeep(urlStr) {
+    async function processAndFetchDeep(urlStr, fallbackDomain) {
         try {
-            const rawText = await smartFetch(urlStr);
+            let target = urlStr;
+            if (target.includes('your-domain.com') && fallbackDomain) {
+                target = target.replace('your-domain.com', fallbackDomain);
+            }
+            const rawText = await smartFetch(target);
             const decodedText = decodeBase64Safe(rawText);
             let res = processDirectNode(decodedText); if (res.success) return res;
             res = processDirectNode(rawText); if (res.success) return res;
@@ -836,8 +845,13 @@
                 const code = await smartFetch(url);
                 const config = parseConfig(code);
                 if (config) {
-                    const targetUrl = buildUrl(config.domain, config.subPath);
-                    const deepResult = await processAndFetchDeep(targetUrl); results.push(deepResult);
+                    let domain = config.domain;
+                    if (domain === 'your-domain.com') {
+                        domain = 'vercel.igac.eu.cc';
+                    }
+                    const targetUrl = buildUrl(domain, config.subPath);
+                    const deepResult = await processAndFetchDeep(targetUrl, 'vercel.igac.eu.cc'); 
+                    results.push(deepResult);
                 } else {
                     let res = processDirectNode(decodeBase64Safe(code));
                     if (!res.success) res = processDirectNode(code);

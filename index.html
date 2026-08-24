@@ -765,9 +765,30 @@
         const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px'; document.body.appendChild(ta); ta.select();
         try { document.execCommand('copy'); } catch (err) {} document.body.removeChild(ta);
     }
-    function processDirectNode(link) {
-        const vlessMatch = link.match(/vless:\/\/([a-fA-F0-9\-]+)@[^?]+\?([^#\n\r]+)/);
-        if (vlessMatch) { const uuid = vlessMatch[1]; const params = vlessMatch[2]; const subDomain = getSelectedSubDomain(); return { success: true, url: `https://${subDomain}/sub?uuid=${uuid}&${params}` }; }
+
+    function processDirectNode(raw) {
+        if (!raw) return { success: false, error: 'ERR' };
+        const subDomain = getSelectedSubDomain();
+        let text = raw.trim();
+        let decoded = decodeBase64Safe(text);
+        if (decoded && /^(vless|trojan|vmess|ss|ssr|hysteria2?):\/\//im.test(decoded)) {
+            text = decoded;
+        }
+
+        const lines = text.split(/[\r\n\s]+/);
+        let targetNode = null;
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (/^(vless|trojan|vmess|ss|ssr|hysteria2?):\/\//i.test(trimmed)) {
+                targetNode = trimmed;
+                break;
+            }
+        }
+
+        if (targetNode) {
+            const finalUrl = `https://${subDomain}/sub?link=${encodeURIComponent(targetNode)}`;
+            return { success: true, url: finalUrl };
+        }
         return { success: false, error: 'ERR' };
     }
 
@@ -795,7 +816,7 @@
     }
 
     async function smartFetch(url) {
-        const cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+        let cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
         const targetList = [
             `https://down.nigx.cn/${cleanUrl}`,
             url.startsWith('http') ? url : `https://${url}`
@@ -823,9 +844,8 @@
                 target = target.replace('your-domain.com', fallbackDomain);
             }
             const rawText = await smartFetch(target);
-            const decodedText = decodeBase64Safe(rawText);
-            let res = processDirectNode(decodedText); if (res.success) return res;
-            res = processDirectNode(rawText); if (res.success) return res;
+            let res = processDirectNode(rawText);
+            if (res.success) return res;
             return { success: false, error: 'ERR' };
         } catch (err) { return { success: false, error: 'ERR' }; }
     }
@@ -834,7 +854,7 @@
         fetchBtn.disabled = true; fetchBtn.textContent = '...';
         const results = [];
         for (const url of urls) {
-            if (/^(vless|trojan|ss|vmess):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
+            if (/^(vless|trojan|ss|vmess|hysteria2?):\/\//i.test(url)) { results.push(processDirectNode(url)); continue; }
             try {
                 const code = await smartFetch(url);
                 const config = parseConfig(code);
@@ -846,14 +866,13 @@
                             const u = url.startsWith('http') ? new URL(url) : new URL('https://' + url);
                             parsedHost = u.hostname;
                         } catch(e) {}
-                        domain = parsedHost || 'vercel.igac.eu.cc';
+                        domain = parsedHost || 'vl.zh08.kdns.fr';
                     }
                     const targetUrl = buildUrl(domain, config.subPath);
                     const deepResult = await processAndFetchDeep(targetUrl, domain); 
                     results.push(deepResult);
                 } else {
-                    let res = processDirectNode(decodeBase64Safe(code));
-                    if (!res.success) res = processDirectNode(code);
+                    let res = processDirectNode(code);
                     results.push(res);
                 }
             } catch (err) { results.push({ success: false, error: 'ERR' }); }
@@ -893,7 +912,7 @@
                 targetType = 'singbox';
             }
 
-            const convertedUrl = `https://url.v1.mk/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false`;
+            const convertedUrl = `https://subapi.cmliussss.net/sub?target=${targetType}&url=${encodeURIComponent(currentFinalSubUrl)}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2Fcmliu%2FACL4SSR%2Fmain%2FClash%2Fconfig%2FACL4SSR_Online.ini&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=false&fdn=false&new_name=true`;
 
             window.location.href = scheme + encodeURIComponent(convertedUrl); 
         });

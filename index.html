@@ -751,7 +751,7 @@
         } catch (e) { return null; }
     }
     function buildUrl(domain, subPath) {
-        domain = domain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+        domain = domain.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
         subPath = subPath.replace(/^\/+/, '');
         return `https://${domain}/${subPath}`;
     }
@@ -795,19 +795,13 @@
     }
 
     async function smartFetch(url) {
-        const cleanUrl = url.replace(/^https?:\/\//, '');
-        const attempts = [
-            (u) => `https://down.nigx.cn/${cleanUrl}`,
-            (u) => u,
-            (u) => u.includes('raw.githubusercontent.com') ? u.replace('https://raw.githubusercontent.com', 'https://raw.gitmirror.com') : null,
-            (u) => `https://down.nigx.cn/${u}`,
-            (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
-            (u) => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
-        ].filter(Boolean);
+        const cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+        const targetList = [
+            `https://down.nigx.cn/${cleanUrl}`,
+            url.startsWith('http') ? url : `https://${url}`
+        ];
 
-        for (const getTarget of attempts) {
-            const target = typeof getTarget === 'function' ? getTarget(url) : getTarget;
-            if (!target) continue;
+        for (const target of targetList) {
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 4500);
@@ -847,10 +841,15 @@
                 if (config) {
                     let domain = config.domain;
                     if (domain === 'your-domain.com') {
-                        domain = 'vercel.igac.eu.cc';
+                        let parsedHost = '';
+                        try {
+                            const u = url.startsWith('http') ? new URL(url) : new URL('https://' + url);
+                            parsedHost = u.hostname;
+                        } catch(e) {}
+                        domain = parsedHost || 'vercel.igac.eu.cc';
                     }
                     const targetUrl = buildUrl(domain, config.subPath);
-                    const deepResult = await processAndFetchDeep(targetUrl, 'vercel.igac.eu.cc'); 
+                    const deepResult = await processAndFetchDeep(targetUrl, domain); 
                     results.push(deepResult);
                 } else {
                     let res = processDirectNode(decodeBase64Safe(code));
